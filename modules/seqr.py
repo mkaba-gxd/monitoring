@@ -13,6 +13,7 @@ from .func import *
 def batch(sample, anal_dir):
 
     tbl = getinfo(subname_query(sample))
+    if tbl.shape[0] == 0 : init("Unregistered sample ID.")
     subname = tbl.sub_name[0]
     anal_type = tbl.PRJ_TYPE[0]
     if anal_type != 'WTS' : init("Analysis type is not WTS")
