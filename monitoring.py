@@ -3,8 +3,9 @@ from modules import *
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Multi-command script"
+        description="Tools for monitoring analysis data."
     )
+    parser.add_argument('--version','-v', action='version', version='%(prog)s v1.0.0')
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # monitoring QC
