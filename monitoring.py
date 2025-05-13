@@ -1,11 +1,20 @@
 import argparse
 from modules import *
 
+VERSION="v1.0.0"
+
+class CustomHelpFormatter(argparse.HelpFormatter):
+    def add_usage(self, usage, actions, groups, prefix=None):
+        version_info = f"version: {VERSION}\n"
+        self._add_item(lambda: version_info, [])
+        super().add_usage(usage, actions, groups, prefix)
+
 def main():
     parser = argparse.ArgumentParser(
-        description="Tools for monitoring analysis data."
+        description="Tools for monitoring analysis data.",
+        formatter_class=CustomHelpFormatter
     )
-    parser.add_argument('--version','-v', action='version', version='%(prog)s v1.0.0')
+    parser.add_argument('--version','-v', action='version', version=f'%(prog)s {VERSION}')
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # monitoring QC

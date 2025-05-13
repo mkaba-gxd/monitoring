@@ -18,11 +18,27 @@ SCRIPT=/data1/labTools/supplement/monitoring.py
 ## マニュアルの表示
 全体の概要表示
 ```bash
-singularity exec --bind /data1 $img python $SCRIPT -h
+$ singularity exec --bind /data1 $img python $SCRIPT --help
+version: v1.0.0
+usage: monitoring.py [-h] [--version] {QC,CNV,fusion,FS,preFilter,PRE,benchmark,BM} ...
+
+Tools for monitoring analysis data.
+
+positional arguments:
+  {QC,CNV,fusion,FS,preFilter,PRE,benchmark,BM}
+    QC                  QC monitoring
+    CNV                 CNV(PureCN) monitoring
+    fusion (FS)         Fusion(STAR-SEQR) monitoring
+    preFilter (PRE)     create pre-filtered data
+    benchmark (BM)      List benchmark data.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version, -v         show program's version number and exit
 ```
 コマンド別の詳細表示
 ```
-singularity exec --bind /data1 $img python $SCRIPT <command> -h
+singularity exec --bind /data1 $img python $SCRIPT <command> --help
 ```
 
 ## 1\. QC値
