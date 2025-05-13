@@ -1,19 +1,15 @@
+import sys
 import argparse
 from modules import *
 
 VERSION="v1.0.0"
 
-class CustomHelpFormatter(argparse.HelpFormatter):
-    def add_usage(self, usage, actions, groups, prefix=None):
-        version_info = f"version: {VERSION}\n"
-        self._add_item(lambda: version_info, [])
-        super().add_usage(usage, actions, groups, prefix)
-
 def main():
-    parser = argparse.ArgumentParser(
-        description="Tools for monitoring analysis data.",
-        formatter_class=CustomHelpFormatter
-    )
+
+    if '--help' in sys.argv or '-h' in sys.argv:
+        print(f"version: {VERSION}")
+
+    parser = argparse.ArgumentParser(description="Tools for monitoring analysis data.")
     parser.add_argument('--version','-v', action='version', version=f'%(prog)s {VERSION}')
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -23,7 +19,7 @@ def main():
     parser_qc.set_defaults(func=run_qc)
 
     # monitoring CNV (pureCN)
-    parser_cnv = subparsers.add_parser("CNV", help="CNV(PureCN) monitoring", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser_cnv = subparsers.add_parser("CNV", help="CNV(PureCN) monitoring")
     parser_cnv.add_argument("--flowcellid","-fc", required=True, help="flowcell id")
     parser_cnv.add_argument("--inclusion","-i", required=False, help="sample IDs to include (comma separated)", default="")
     parser_cnv.add_argument("--exclusion","-e", required=False, help="sample IDs to exclude (comma separated)", default="")
@@ -32,14 +28,14 @@ def main():
     parser_cnv.set_defaults(func=run_cnv)
 
     # monitoring Fusion (STAR-SEQR)
-    parser_seqr = subparsers.add_parser("fusion", aliases=['FS'], help="Fusion(STAR-SEQR) monitoring", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser_seqr = subparsers.add_parser("fusion", aliases=['FS'], help="Fusion(STAR-SEQR) monitoring")
     parser_seqr.add_argument("--sample","-s", required=True, help="sample id")
     parser_seqr.add_argument("--verbose","-v", required=False, help="Show details", action='store_true')
     parser_seqr.add_argument("--analysis_dir","-d", required=False, help="parent analytical directory", default="/data1/data/result")
     parser_seqr.set_defaults(func=run_seqr)
 
     # create pre-filtered data
-    parser_pre = subparsers.add_parser("preFilter", aliases=['PRE'], help="create pre-filtered data", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser_pre = subparsers.add_parser("preFilter", aliases=['PRE'], help="create pre-filtered data")
     parser_pre.add_argument("--flowcellid","-fc", required=True, help="flowcell id")
     parser_pre.add_argument("--directory","-d", required=False, help="parent analytical directory", default="/data1/data/result")
     parser_pre.add_argument("--project_type","-t", required=False, help="project type", default="both", choices=["both","WTS","eWES"])
@@ -49,7 +45,7 @@ def main():
     parser_pre.set_defaults(func=run_preFilter)
 
     # Creating Benchmark Files
-    parser_bcm = subparsers.add_parser("benchmark", aliases=['BM'], help="List benchmark data.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser_bcm = subparsers.add_parser("benchmark", aliases=['BM'], help="List benchmark data.")
     parser_bcm.add_argument("--flowcellid","-fc", required=True, help="flowcell id")
     parser_bcm.add_argument("--project_type","-t", required=False, help="project type", default="both", choices=["both","WTS","eWES"])
     parser_bcm.add_argument("--directory","-d", required=False, help="parent analytical directory", default="/data1/data/result")
