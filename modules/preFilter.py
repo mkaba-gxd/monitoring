@@ -2,6 +2,7 @@ import os
 import sys
 import pandas as pd
 import numpy as np
+from itertools import product
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import PatternFill
@@ -20,22 +21,24 @@ use_columns_ewes_2 = ['Gene_name','CHROM','START','END','CN','C.flagged','seg.me
 use_columns_wts_1 = ['Out-of-Frame','OncoKB','cancer-related','gene1','gene2','chr1','breakpoint_1','chr2','breakpoint_2','max_split_cnt','max_span_cnt','sample_type','disease','tools','inferred_fusion_type','samples','cancer_db_hits','fusion_IDs']
 
 def expand_breakpoints(df):
-    new_rows = []
+
+    expanded_rows = []
+
     for _, row in df.iterrows():
 
-        bp1_values = str(row['breakpoint_1']).split('|')
-        bp2_values = str(row['breakpoint_2']).split('|')
-        max_len = max(len(bp1_values), len(bp2_values))
-        bp1_values += [''] * (max_len - len(bp1_values))
-        bp2_values += [''] * (max_len - len(bp2_values))
+        bp1_raw = str(row['breakpoint_1'])
+        bp2_raw = str(row['breakpoint_2'])
 
-        for bp1, bp2 in zip(bp1_values, bp2_values):
+        bp1_values = bp1_raw.split('|') if '|' in bp1_raw else [bp1_raw]
+        bp2_values = bp2_raw.split('|') if '|' in bp2_raw else [bp2_raw]
+
+        for bp1, bp2 in product(bp1_values, bp2_values):
             new_row = row.copy()
             new_row['breakpoint_1'] = bp1
             new_row['breakpoint_2'] = bp2
-            new_rows.append(new_row)
+            expanded_rows.append(new_row)
 
-    return pd.DataFrame(new_rows)
+    return pd.DataFrame(expanded_rows)
 
 def cull_columns(file, sheet_name, hidden_columns, data) :
     wb = load_workbook(file)
@@ -215,7 +218,7 @@ def run_preFilter(args):
             continue
 
         for i, item in df_prj.iterrows() :
-
+#            if item['SAMPLE_ID'] == 'CR_25_00315_FP_R_JFN_1' : continue
             if pj_type == 'eWES':
                 file = os.path.join(anal_dir, item['SAMPLE_ID'], 'Summary', item['SAMPLE_ID']+'.summarized.snv.target.tsv')
                 if not os.path.isfile(file):
@@ -337,14 +340,18 @@ def run_preFilter(args):
                         data.to_excel(writer, sheet_name=item['SAMPLE_ID'], index=False)
 
                 add_filt(out_file_2, item['SAMPLE_ID'])
-                as_result = pd.read_csv(os.path.join(anal_dir, item['SAMPLE_ID'], 'Summary', item['SAMPLE_ID'] + '.summarized.splice.tsv'), sep="\t")
-                as_result = as_result[ as_result['ONCOGENICITY'].notnull() ]
+                file = os.path.join(anal_dir, item['SAMPLE_ID'], 'Summary', item['SAMPLE_ID'] + '.summarized.splice.tsv')
+                if not os.path.isfile(file):
+                    print('file not exists: ' + file)
+                    as_result = pd.DataFrame()
+                else:
+                    as_result = pd.read_csv(os.path.join(anal_dir, item['SAMPLE_ID'], 'Summary', item['SAMPLE_ID'] + '.summarized.splice.tsv'), sep="\t")
+                    as_result = as_result[ as_result['ONCOGENICITY'].notnull() ]
                 
                 if as_result.shape[0] > 0:
                     as_result = as_result['spliceName'].tolist()
                     add_info(out_file_2, item['SAMPLE_ID'], [['Specimen_ID',item['PATH_NO']], ['Cancer_Type',item['DIAGNOSIS_NAME']]]+as_result)
                 else :
-#                    add_info(out_file_2, item['SAMPLE_ID'], [item['PATH_NO'],item['DIAGNOSIS_NAME']])
                     add_info(out_file_2, item['SAMPLE_ID'], [['Specimen_ID',item['PATH_NO']], ['Cancer_Type',item['DIAGNOSIS_NAME']]])
 
                 file = os.path.join(anal_dir, item['SAMPLE_ID'], 'Alternative_splicing', 'ESDetector', item['SAMPLE_ID']+'.exon_skipped.tsv')
@@ -353,7 +360,6 @@ def run_preFilter(args):
                 else:
                     data = pd.read_csv(file, sep="\t")
                     if data.shape[0] > 0 :
-#                        print('AS Detected: ' + file)
                         try:
                             with pd.ExcelWriter(out_file_3, mode="a", engine="openpyxl", if_sheet_exists="replace") as writer :
                                 data.to_excel(writer, sheet_name=item['SAMPLE_ID'], index=False)
