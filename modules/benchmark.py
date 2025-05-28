@@ -79,7 +79,7 @@ def run_benchmark(args):
 
         anal_dir = os.path.join(directory,pj_type,df_prj['seqDir'][0])
         out_file = os.path.join(outdir, df_prj['seqDir'][0] + '.xlsx')
-        if os.path.isfile(out_file) : os.rmdir(out_file)
+#        if os.path.isfile(out_file) : os.remove(out_file)
 
         for i, item in df_prj.iterrows() :
             time_values = []
