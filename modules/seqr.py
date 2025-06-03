@@ -10,6 +10,7 @@ import numpy as np
 from pathlib import Path
 from .func import *
 
+'''
 def batch(sample, anal_dir):
 
     tbl = getinfo(subname_query(sample))
@@ -37,6 +38,7 @@ def subname_query(sample):
     WHERE ghl.SAMPLE_ID = '{sample}'
     """
     return query
+'''
 
 def read_line(file_path):
     if not os.path.isfile(file_path) : return 0

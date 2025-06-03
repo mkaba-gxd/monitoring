@@ -1,22 +1,6 @@
 import pandas as pd
 from .func import *
 
-'''
-def SelectData(fc_id):
-    query = f"""
-    SELECT tesh.run_id, concat(tesh.equip_side, tesh.fc_id) AS sub_name, gp.PRJ_TYPE, ghl.ANAL_STATUS, gp.SAMPLE_ID
-    FROM gxd.tb_expr_seq_header tesh
-    INNER JOIN gxd.gc_qc_sample gqs
-    ON tesh.run_id = gqs.run_id
-    INNER JOIN gxd.gc_project gp
-    ON gqs.SAMPLE_ID = gp.SAMPLE_ID
-    INNER JOIN gxd.gc_history_log ghl
-    ON gqs.SAMPLE_ID = ghl.SAMPLE_ID
-    AND ghl.idx = (SELECT MAX(idx) FROM gc_history_log WHERE SAMPLE_ID = gqs.SAMPLE_ID)
-    WHERE tesh.fc_id = '{fc_id}'
-    """
-    return query
-'''
 
 def load_value(file):
     try :
@@ -81,6 +65,7 @@ def run_cnv(args):
 
         out_df.loc[out_df.shape[0]+1] = fac
 
+    os.makedirs(outdir, exist_ok=True)
     out_df.to_csv(os.path.join(outdir, df_info['seqDir'][0] + '.tsv'), header=True, index=False, sep="\t")
 
 

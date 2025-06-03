@@ -6,6 +6,7 @@
 | QC             | WET,DRY工程のQC値一覧作成         |
 | CNV            | (PureCN) purity, ploidyの一覧作成 |
 | fusion, FS     | (STAR-SEQR) 所要時間の推定        |
+| splice, AS     | MET, AR 領域のdepthを描画         |
 | preFilter, PRE | フィルター前データ作成             |
 | benchmark, BM  | 工程所要時間の一覧作成             |
 
@@ -20,15 +21,16 @@ SCRIPT=/data1/labTools/supplement/monitoring.py
 ```bash
 $ singularity exec --bind /data1 $img python $SCRIPT --help
 version: v1.0.0
-usage: monitoring.py [-h] [--version] {QC,CNV,fusion,FS,preFilter,PRE,benchmark,BM} ...
+usage: monitoring.py [-h] [--version] {QC,CNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM} ...
 
 Tools for monitoring analysis data.
 
 positional arguments:
-  {QC,CNV,fusion,FS,preFilter,PRE,benchmark,BM}
+  {QC,CNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM}
     QC                  QC monitoring
     CNV                 CNV(PureCN) monitoring
     fusion (FS)         Fusion(STAR-SEQR) monitoring
+    splice (AS)         Alternative Splicing monitoring
     preFilter (PRE)     create pre-filtered data
     benchmark (BM)      List benchmark data.
 
@@ -85,7 +87,19 @@ singularity exec --bind /data1 $img python $SCRIPT FS -s $sample
 ```
 ⇒ sequenceの組合せ総数がディスプレイに表示される
 
-## 4\. pre-Filter
+## 4\. Alternative Splicing
+BAMファイルからMET,AR領域のdepthを計測し、exon領域とともに描画する。
+変数の設定
+```
+sample=""
+```
+スクリプト実行
+```
+singularity exec --bind /data1 $img python $SCRIPT AS -s $sample
+```
+⇒ /data1/work/monitoring/splice/[sample]_dnacopy_[AR/MET].pdf が作成される。
+
+## 5\. pre-Filter
 Filer前の解析結果データを作成する。\
 変数の設定
 ```
@@ -107,7 +121,7 @@ singularity exec --bind /data1 $img python $SCRIPT PRE -fc $flowcellid --inclusi
 ```
 ⇒ /data1/work/monitoring/preFilter/[batchfolder] の下に複数のxlsxファイルが作成される
 
-## 5\. benchmark
+## 6\. benchmark
 解析工程でBenchmarkフォルダに出力される各工程の所要時間(h:m:sの値)のテーブルを作成する。\
 変数の設定
 ```
