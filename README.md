@@ -76,7 +76,8 @@ singularity exec --bind /data1 $img python $SCRIPT CNV -fc $flowcellid --inclusi
 ## 3\. Fusion
 STAR-RSEQの実行時間の目安となる sequenceの組合せ総数を算出する。\
 値が 10^6 未満なら数時間で終了する可能性が高い。\
-2025/4/24時点での組合せ総数の最大11,049,185に対し、STAR-SEQRの所要時間は 44:29:04。\
+2025/4/24 時点での組合せ総数の最大11,049,185に対し、STAR-SEQRの所要時間は 44:29:04。\
+2025/6/2 時点での組合せ総数の最大30,473,853に対し、STAR-SEQRの所要時間は 166：37：57。\
 変数の設定
 ```
 sample=""
@@ -88,7 +89,7 @@ singularity exec --bind /data1 $img python $SCRIPT FS -s $sample
 ⇒ sequenceの組合せ総数がディスプレイに表示される
 
 ## 4\. Alternative Splicing
-BAMファイルからMET,AR領域のdepthを計測し、exon領域とともに描画する。
+BAMファイルからMET,AR領域のdepthを計測し、exon領域とともに描画する。\
 変数の設定
 ```
 sample=""
