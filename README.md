@@ -97,7 +97,7 @@ sample=""
 ```
 singularity exec --bind /data1 $img python $SCRIPT AS -s $sample
 ```
-⇒ /data1/work/monitoring/splice/[sample]_dnacopy_[AR/MET].pdf が作成される。
+⇒ /data1/work/monitoring/splice/[sample]\_dnacopy\_[AR/MET].pdf が作成される。
 
 ## 5\. pre-Filter
 Filer前の解析結果データを作成する。\
