@@ -15,7 +15,6 @@
 img=/data1/labTools/labTools.sif
 SCRIPT=/data1/labTools/monitoring/latest/monitoring.py
 ```
-
 ## マニュアルの表示
 全体の概要表示
 ```bash
@@ -52,15 +51,12 @@ singularity exec --bind /data1 $img python $SCRIPT QC
 ⇒ /data1/work/monitoring/QC/[timestamp].xlsx が作成される
 
 ## 2\. PureCN
-PC,NCを除いた各サンプルについて、解析で採用されたbin sizeと bin size 400/800/1600 のPureCNで算出されたpurityとploidyの一覧を出力する。
-変数の設定
+PC,NCを除いた各サンプルについて、解析で採用されたbin sizeと bin size 400/800/1600 のPureCNで算出されたpurityとploidyの一覧を出力する。\
+PC,NCを除く全サンプルの情報を書き出す場合
 ```
 flowcellid=""
 inc_ID=""
 exc_ID=""
-```
-PC,NCを除く全サンプルの情報を書き出す場合
-```
 singularity exec --bind /data1 $img python $SCRIPT CNV -fc $flowcellid
 ```
 除外するサンプルIDがある場合（comma区切りで複数指定可）
@@ -72,6 +68,8 @@ singularity exec --bind /data1 $img python $SCRIPT CNV -fc $flowcellid --exclusi
 singularity exec --bind /data1 $img python $SCRIPT CNV -fc $flowcellid --inclusion $inc_ID
 ```
 ⇒ /data1/work/monitoring/PureCN/[batchfolder].tsv が作成される
+*すでに出力ファイルが存在する場合は上書きする。
+
 ### オプションの詳細
 ```
 $ singularity exec --bind /data1 $img python $SCRIPT CNV --help
@@ -97,12 +95,8 @@ STAR-RSEQの実行時間の目安となる sequenceの組合せ総数を算出�
 値が 10^6 未満なら数時間で終了する可能性が高い。\
 2025/4/24 時点での組合せ総数の最大11,049,185に対し、STAR-SEQRの所要時間は 44:29:04\
 2025/6/2 時点での組合せ総数の最大30,473,853に対し、STAR-SEQRの所要時間は 166:37:57\
-変数の設定
 ```
 sample=""
-```
-スクリプト実行
-```
 singularity exec --bind /data1 $img python $SCRIPT FS -s $sample
 ```
 ⇒ sequenceの組合せ総数がディスプレイに表示される
@@ -123,12 +117,8 @@ optional arguments:
 
 ## 4\. Alternative Splicing
 BAMファイルからEGFR, MET,AR領域のdepthを計測し、exon領域とともに描画する。\
-変数の設定
 ```
 sample=""
-```
-スクリプト実行
-```
 singularity exec --bind /data1 $img python $SCRIPT AS -s $sample -c EGFR,MET,AR
 ```
 ⇒ /data1/work/monitoring/splice/[sample]\_dnacopy\_[EGFR/MET/AR].pdf が作成される。
@@ -152,14 +142,11 @@ optional arguments:
 
 ## 5\. pre-Filter
 Filer前の解析結果データを作成する。\
-変数の設定
+PC,NCを除く全サンプルの情報を書き出す場合
 ```
 flowcellid=""
 inc_ID=""
 exc_ID=""
-```
-PC,NCを除く全サンプルの情報を書き出す場合
-```
 singularity exec --bind /data1 $img python $SCRIPT PRE -fc $flowcellid
 ```
 除外するサンプルIDがある場合（comma区切りで複数指定可）
@@ -195,14 +182,11 @@ optional arguments:
 
 ## 6\. benchmark
 解析工程でBenchmarkフォルダに出力される各工程の所要時間(h:m:sの値)のテーブルを作成する。\
-変数の設定
+PC,NCを除く全サンプルの情報を書き出す場合
 ```
 flowcellid=""
 inc_ID=""
 exc_ID=""
-```
-PC,NCを除く全サンプルの情報を書き出す場合
-```
 singularity exec --bind /data1 $img python $SCRIPT BM -fc $flowcellid
 ```
 除外するサンプルIDがある場合（comma区切りで複数指定可）
