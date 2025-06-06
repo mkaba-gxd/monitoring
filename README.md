@@ -138,7 +138,7 @@ optional arguments:
 ⇒ /data1/work/monitoring/splice/[sample]\_dnacopy\_[EGFR/MET/AR].pdf が作成される。
 
 ## 5\. preFilter
-Filer前の解析データをExcel出力する。
+Filter前の解析データをExcel出力する。
 ### オプションの詳細
 ```
 $ singularity exec --bind /data1 $img python $SCRIPT preFilter --help
@@ -203,4 +203,5 @@ optional arguments:
 |--inclusion/-i    |False    |出力するSample IDを限定。カンマ区切りで複数指定可能 |None        |
 |--exclusion/-e    |False    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None        |
 
-⇒ /data1/work/monitoring/benchmark/[batchfolder].xlsx が作成される
+⇒ /data1/work/monitoring/benchmark/[batchfolder].xlsx が作成される\
+*すでに出力ファイルが存在する場合は上書きする。
