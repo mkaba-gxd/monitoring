@@ -72,7 +72,7 @@ optional arguments:
                         output directory path (default: /data1/work/monitoring/PureCN)
 ```
 | option          |required | 概要                     |default                       |
-|:----------------|:--------|:-------------------------|:-----------------------------|
+|:----------------|:-------:|:-------------------------|:-----------------------------|
 |--flowcellid/-fc |True     |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字   |None |
 |--inclusion/-i   |False    |出力するSample IDを限定。カンマ区切りで複数指定可能 |None    |
 |--exclusion/-e   |False    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None    |
@@ -100,7 +100,7 @@ optional arguments:
                         parent analytical directory (default: /data1/data/result)
 ```
 | option           |required | 概要                     |default             |
-|:-----------------|:--------|:-------------------------|:-------------------|
+|:-----------------|:-------:|:-------------------------|:-------------------|
 |--sample/-s       |True     |Sample ID。複数指定不可    |None                |
 |--verbose/-v      |False    |詳細を表示するかどうか      |False               |
 |--analysis_dir/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result |
@@ -129,7 +129,7 @@ optional arguments:
                         output directory path (default: /data1/work/monitoring/splice)
 ```
 | option           |required | 概要                     |default                   |
-|:-----------------|:--------|:-------------------------|:-------------------------|
+|:-----------------|:-------:|:-------------------------|:-------------------------|
 |--sample/-s       |True     |Sample ID, 複数指定不可    |None                      |
 |--category/c      |False    |描画する遺伝子領域。EGFR, MET, ARから選択 | AR          |
 |--analysis_dir/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result        |
@@ -161,7 +161,7 @@ optional arguments:
                         sample IDs to exclude (comma separated) (default: )
 ```
 | option           |required | 概要                     |default                           |
-|:-----------------|:--------|:-------------------------|:---------------------------------|
+|:-----------------|:-------:|:-------------------------|:---------------------------------|
 |--flowcellid/-fc  |True     |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字 |None |
 |--directory/-d    |False    |解析フォルダの親ディレクトリ |/data1/data/result                |
 |--project_type/-t |False    |解析種別。both,eWES,WTSから選択                   |both        |
@@ -195,7 +195,7 @@ optional arguments:
                         sample IDs to exclude (comma separated) (default: )
 ```
 | option           |required | 概要                     |default                           |
-|:-----------------|:--------|:-------------------------|:---------------------------------|
+|:-----------------|:-------:|:-------------------------|:---------------------------------|
 |--flowcellid/-fc  |True     |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字 |None |
 |--project_type/-t |False    |解析種別。both,eWES,WTSから選択                   |both        |
 |--directory/-d    |False    |解析フォルダの親ディレクトリ |/data1/data/result                |
