@@ -95,12 +95,14 @@ def run_benchmark(args):
                         try :
                             parsed_time = datetime.datetime.strptime(time_str, '%H:%M:%S').time()
                         except Exception as e:
-                            parsed_time = None
+                            m, s = divmod(df['s'].iloc[0], 60)
+                            h, m = divmod(m, 60)
+                            parsed_time = str(int(h)) + ':' + str(int(m)) + ':' + str(int(s))
                     else :
-                        parsed_time = None
+                        parsed_time = 'unclear'
 
                 except Exception as e:
-                    parsed_time = None
+                    parsed_time = '-'
 
                 time_values.append(parsed_time)
 
