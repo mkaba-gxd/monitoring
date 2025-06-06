@@ -59,12 +59,13 @@ def run_splice(args) :
         init('Reference file not found. Abort.')
 
     os.makedirs(outdir, exist_ok=True)
-    dpCmd = rsCmd = ''
+    dpCmd = rsCmd = rmCmd = ''
     mvCmd = f"cd {outdir} && "
     for c, p in BED.items():
         dpCmd = dpCmd + f"samtools depth -@ 12 -a -Q 255 -b {p} {bam} > {sample}.{c}.depth.txt && "
     for c, p in TARGET.items():
         rsCmd = rsCmd + f"Rscript --no-save --slave {rscript} {sample}.{c}.depth.txt {p} {sample} && "
-    cmd = mvCmd + dpCmd + rsCmd.rstrip('&& ')
+        rmCmd = rmCmd + f"rm {sample}.{c}.depth.txt && " 
+    cmd = mvCmd + dpCmd + rsCmd + rmCmd.rstrip('&& ')
     os.system(cmd)
-    
+

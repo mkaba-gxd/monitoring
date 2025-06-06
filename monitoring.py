@@ -44,7 +44,7 @@ def main():
 
     parser_as = subparsers.add_parser("splice",aliases=['AS'], help="Alternative Splicing monitoring", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser_as.add_argument("--sample","-s", required=True, help="sample id")
-    parser_as.add_argument("--category","-c", required=True, help="Comma-separated list of genes to include. Valid options: EGFR, MET, AR", default="AS", type=parse_gene_list)
+    parser_as.add_argument("--category","-c", required=False, help="Comma-separated list of genes to include. Valid options: EGFR, MET, AR", default=["AR"], type=parse_gene_list)
     parser_as.add_argument("--analysis_dir","-d", required=False, help="parent analytical directory", default="/data1/data/result")
     parser_as.add_argument("--outdir","-o", required=False, help="output directory path", default="/data1/work/monitoring/splice")
     parser_as.set_defaults(func=run_splice)
