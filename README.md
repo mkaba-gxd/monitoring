@@ -50,7 +50,7 @@ singularity exec --bind /data1 $img python $SCRIPT QC
 ```
 ⇒ /data1/work/monitoring/QC/[timestamp].xlsx が作成される
 
-## 2\. Copy Number Variants（PureCN）
+## 2\. CNV（Copy Number Variants/PureCN）
 PC,NCを除いた各サンプルについて、解析で採用されたbin sizeと bin size 400/800/1600 のPureCNで算出されたpurityとploidyの一覧を出力する。
 ### オプションの詳細
 ```
@@ -82,7 +82,7 @@ optional arguments:
 ⇒ /data1/work/monitoring/PureCN/[batchfolder].tsv が作成される。\
 *すでに出力ファイルが存在する場合は上書きする。
 
-## 3\. Fusion（STAR-SEQR）
+## 3\. fusion（STAR-SEQR）
 STAR-RSEQの実行時間の目安となる sequenceの組合せ総数を算出する。\
 値が 10^6 未満なら数時間で終了する可能性が高い。
 ### オプションの詳細
@@ -109,7 +109,7 @@ optional arguments:
 2025/4/24 時点：組合せ総数の最大11,049,185に対し、STAR-SEQRの所要時間は 44:29:04\
 2025/6/2 時点：組合せ総数の最大30,473,853に対し、STAR-SEQRの所要時間は 166:37:57
 
-## 4\. Alternative Splicing
+## 4\. splice（Alternative Splicing）
 BAMファイルからEGFR, MET,AR領域のdepthを計測し、exon領域とともに描画する。
 ### オプションの詳細
 ```
@@ -137,7 +137,7 @@ optional arguments:
 
 ⇒ /data1/work/monitoring/splice/[sample]\_dnacopy\_[EGFR/MET/AR].pdf が作成される。
 
-## 5\. pre-Filter
+## 5\. preFilter
 Filer前の解析データをExcel出力する。
 ### オプションの詳細
 ```
