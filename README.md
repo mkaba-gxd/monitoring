@@ -6,14 +6,14 @@
 | QC             | WET,DRY工程のQC値一覧作成         |
 | CNV            | (PureCN) purity, ploidyの一覧作成 |
 | fusion, FS     | (STAR-SEQR) 所要時間の推定        |
-| splice, AS     | MET, AR 領域のdepthを描画         |
+| splice, AS     | EGFR, MET, AR 領域のdepthを描画   |
 | preFilter, PRE | フィルター前データ作成             |
 | benchmark, BM  | 工程所要時間の一覧作成             |
 
 ## 変数の定義(共通)
 ```bash
 img=/data1/labTools/labTools.sif
-SCRIPT=/data1/labTools/supplement/monitoring.py
+SCRIPT=/data1/labTools/monitoring/latest/monitoring.py
 ```
 
 ## マニュアルの表示
@@ -72,6 +72,25 @@ singularity exec --bind /data1 $img python $SCRIPT CNV -fc $flowcellid --exclusi
 singularity exec --bind /data1 $img python $SCRIPT CNV -fc $flowcellid --inclusion $inc_ID
 ```
 ⇒ /data1/work/monitoring/PureCN/[batchfolder].tsv が作成される
+### オプションの詳細
+```
+$ singularity exec --bind /data1 $img python $SCRIPT CNV --help
+version: v1.0.0
+usage: monitoring.py CNV [-h] --flowcellid FLOWCELLID [--inclusion INCLUSION] [--exclusion EXCLUSION]
+                         [--directory DIRECTORY] [--outdir OUTDIR]
+optional arguments:
+  -h, --help            show this help message and exit
+  --flowcellid FLOWCELLID, -fc FLOWCELLID
+                        flowcell id (default: None)
+  --inclusion INCLUSION, -i INCLUSION
+                        sample IDs to include (comma separated) (default: )
+  --exclusion EXCLUSION, -e EXCLUSION
+                        sample IDs to exclude (comma separated) (default: )
+  --directory DIRECTORY, -d DIRECTORY
+                        parent analytical directory (default: /data1/data/result)
+  --outdir OUTDIR, -o OUTDIR
+                        output directory path (default: /data1/work/monitoring/PureCN)
+```
 
 ## 3\. Fusion
 STAR-RSEQの実行時間の目安となる sequenceの組合せ総数を算出する。\
@@ -87,18 +106,49 @@ sample=""
 singularity exec --bind /data1 $img python $SCRIPT FS -s $sample
 ```
 ⇒ sequenceの組合せ総数がディスプレイに表示される
+### オプションの詳細
+```
+$ singularity exec --bind /data1 $img python $SCRIPT FS --help
+version: v1.0.0
+usage: monitoring.py fusion [-h] --sample SAMPLE [--verbose] [--analysis_dir ANALYSIS_DIR]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --sample SAMPLE, -s SAMPLE
+                        sample id (default: None)
+  --verbose, -v         Show details (default: False)
+  --analysis_dir ANALYSIS_DIR, -d ANALYSIS_DIR
+                        parent analytical directory (default: /data1/data/result)
+```
 
 ## 4\. Alternative Splicing
-BAMファイルからMET,AR領域のdepthを計測し、exon領域とともに描画する。\
+BAMファイルからEGFR, MET,AR領域のdepthを計測し、exon領域とともに描画する。\
 変数の設定
 ```
 sample=""
 ```
 スクリプト実行
 ```
-singularity exec --bind /data1 $img python $SCRIPT AS -s $sample
+singularity exec --bind /data1 $img python $SCRIPT AS -s $sample -c EGFR,MET,AR
 ```
-⇒ /data1/work/monitoring/splice/[sample]\_dnacopy\_[AR/MET].pdf が作成される。
+⇒ /data1/work/monitoring/splice/[sample]\_dnacopy\_[EGFR/MET/AR].pdf が作成される。
+### オプションの詳細
+```
+$ singularity exec --bind /data1 $img python $SCRIPT AS --help
+version: v1.0.0
+usage: monitoring.py splice [-h] --sample SAMPLE --category CATEGORY [--analysis_dir ANALYSIS_DIR] [--outdir OUTDIR]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --sample SAMPLE, -s SAMPLE
+                        sample id (default: None)
+  --category CATEGORY, -c CATEGORY
+                        Comma-separated list of genes to include. Valid options: EGFR, MET, AR (default: AS)
+  --analysis_dir ANALYSIS_DIR, -d ANALYSIS_DIR
+                        parent analytical directory (default: /data1/data/result)
+  --outdir OUTDIR, -o OUTDIR
+                        output directory path (default: /data1/work/monitoring/splice)
+```
 
 ## 5\. pre-Filter
 Filer前の解析結果データを作成する。\
@@ -121,6 +171,27 @@ singularity exec --bind /data1 $img python $SCRIPT PRE -fc $flowcellid --exclusi
 singularity exec --bind /data1 $img python $SCRIPT PRE -fc $flowcellid --inclusion $inc_ID
 ```
 ⇒ /data1/work/monitoring/preFilter/[batchfolder] の下に複数のxlsxファイルが作成される
+### オプションの詳細
+```
+$ singularity exec --bind /data1 $img python $SCRIPT PRE --help
+version: v1.0.0
+usage: monitoring.py preFilter [-h] --flowcellid FLOWCELLID [--directory DIRECTORY] [--project_type {both,WTS,eWES}]
+                               [--outdir OUTDIR] [--inclusion INCLUSION] [--exclusion EXCLUSION]
+optional arguments:
+  -h, --help            show this help message and exit
+  --flowcellid FLOWCELLID, -fc FLOWCELLID
+                        flowcell id (default: None)
+  --directory DIRECTORY, -d DIRECTORY
+                        parent analytical directory (default: /data1/data/result)
+  --project_type {both,WTS,eWES}, -t {both,WTS,eWES}
+                        project type (default: both)
+  --outdir OUTDIR, -o OUTDIR
+                        output directory path (default: /data1/work/monitoring/preFilter)
+  --inclusion INCLUSION, -i INCLUSION
+                        sample IDs to include (comma separated) (default: )
+  --exclusion EXCLUSION, -e EXCLUSION
+                        sample IDs to exclude (comma separated) (default: )
+```
 
 ## 6\. benchmark
 解析工程でBenchmarkフォルダに出力される各工程の所要時間(h:m:sの値)のテーブルを作成する。\
@@ -143,3 +214,24 @@ singularity exec --bind /data1 $img python $SCRIPT BM -fc $flowcellid --exclusio
 singularity exec --bind /data1 $img python $SCRIPT BM -fc $flowcellid --inclusion $inc_ID
 ```
 ⇒ /data1/work/monitoring/benchmark/[batchfolder].xlsx が作成される
+### オプションの詳細
+```
+$ singularity exec --bind /data1 $img python $SCRIPT BM --help
+version: v1.0.0
+usage: monitoring.py benchmark [-h] --flowcellid FLOWCELLID [--project_type {both,WTS,eWES}] [--directory DIRECTORY]
+                               [--outdir OUTDIR] [--inclusion INCLUSION] [--exclusion EXCLUSION]
+optional arguments:
+  -h, --help            show this help message and exit
+  --flowcellid FLOWCELLID, -fc FLOWCELLID
+                        flowcell id (default: None)
+  --project_type {both,WTS,eWES}, -t {both,WTS,eWES}
+                        project type (default: both)
+  --directory DIRECTORY, -d DIRECTORY
+                        parent analytical directory (default: /data1/data/result)
+  --outdir OUTDIR, -o OUTDIR
+                        output directory path (default: /data1/work/monitoring/benchmark)
+  --inclusion INCLUSION, -i INCLUSION
+                        sample IDs to include (comma separated) (default: )
+  --exclusion EXCLUSION, -e EXCLUSION
+                        sample IDs to exclude (comma separated) (default: )
+```
