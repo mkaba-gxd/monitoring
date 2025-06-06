@@ -51,7 +51,7 @@ singularity exec --bind /data1 $img python $SCRIPT QC
 ⇒ /data1/work/monitoring/QC/[timestamp].xlsx が作成される
 
 ## 2\. PureCN
-PC,NCを除いた各サンプルについて、解析で採用されたbin sizeと bin size 400/800/1600 のPureCNで算出されたpurityとploidyの一覧を出力する。\
+PC,NCを除いた各サンプルについて、解析で採用されたbin sizeと bin size 400/800/1600 のPureCNで算出されたpurityとploidyの一覧を出力する。
 ### オプションの詳細
 ```
 $ singularity exec --bind /data1 $img python $SCRIPT CNV --help
@@ -110,7 +110,7 @@ optional arguments:
 2025/6/2 時点での組合せ総数の最大30,473,853に対し、STAR-SEQRの所要時間は 166:37:57
 
 ## 4\. Alternative Splicing
-BAMファイルからEGFR, MET,AR領域のdepthを計測し、exon領域とともに描画する。\
+BAMファイルからEGFR, MET,AR領域のdepthを計測し、exon領域とともに描画する。
 ### オプションの詳細
 ```
 $ singularity exec --bind /data1 $img python $SCRIPT splice --help
@@ -138,25 +138,7 @@ optional arguments:
 ⇒ /data1/work/monitoring/splice/[sample]\_dnacopy\_[EGFR/MET/AR].pdf が作成される。
 
 ## 5\. pre-Filter
-Filer前の解析結果データを作成する。\
-PC,NCを除く全サンプルの情報を書き出す場合
-```
-flowcellid=""
-singularity exec --bind /data1 $img python $SCRIPT PRE -fc $flowcellid
-```
-除外するサンプルIDがある場合（comma区切りで複数指定可）
-```
-flowcellid=""
-exc_ID=""
-singularity exec --bind /data1 $img python $SCRIPT PRE -fc $flowcellid --exclusion $exc_ID
-```
-限定したいサンプルIDがある場合（comma区切りで複数指定可）
-```
-flowcellid=""
-inc_ID=""
-singularity exec --bind /data1 $img python $SCRIPT PRE -fc $flowcellid --inclusion $inc_ID
-```
-⇒ /data1/work/monitoring/preFilter/[batchfolder] の下に複数のxlsxファイルが作成される
+Filer前の解析結果データを作成する。
 ### オプションの詳細
 ```
 $ singularity exec --bind /data1 $img python $SCRIPT preFilter --help
@@ -178,27 +160,19 @@ optional arguments:
   --exclusion EXCLUSION, -e EXCLUSION
                         sample IDs to exclude (comma separated) (default: )
 ```
+| option           |required | 概要                     |default                           |
+|:-----------------|:--------|:-------------------------|:---------------------------------|
+|--flowcellid/-fc  |True     |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字 |None |
+|--directory/-d    |False    |解析フォルダの親ディレクトリ |/data1/data/result                |
+|--project_type/-t |False    |解析種別。both,eWES,WTSから選択                   |both        |
+|--outdir/-o       |False    |結果の出力先ディレクトリ     |/data1/work/monitoring/preFilter |
+|--inclusion/-i    |False    |出力するSample IDを限定。カンマ区切りで複数指定可能 |None        |
+|--exclusion/-e    |False    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None        |
+
+⇒ /data1/work/monitoring/preFilter/[batchfolder] の下に複数のxlsxファイルが作成される
 
 ## 6\. benchmark
-解析工程でBenchmarkフォルダに出力される各工程の所要時間(h:m:sの値)のテーブルを作成する。\
-PC,NCを除く全サンプルの情報を書き出す場合
-```
-flowcellid=""
-singularity exec --bind /data1 $img python $SCRIPT BM -fc $flowcellid
-```
-除外するサンプルIDがある場合（comma区切りで複数指定可）
-```
-flowcellid=""
-exc_ID=""
-singularity exec --bind /data1 $img python $SCRIPT BM -fc $flowcellid --exclusion $exc_ID
-```
-限定したいサンプルIDがある場合（comma区切りで複数指定可）
-```
-flowcellid=""
-inc_ID=""
-singularity exec --bind /data1 $img python $SCRIPT BM -fc $flowcellid --inclusion $inc_ID
-```
-⇒ /data1/work/monitoring/benchmark/[batchfolder].xlsx が作成される
+解析工程でBenchmarkフォルダに出力される各工程の所要時間(h:m:sの値)のテーブルを作成する。
 ### オプションの詳細
 ```
 $ singularity exec --bind /data1 $img python $SCRIPT benchmark --help
@@ -220,3 +194,13 @@ optional arguments:
   --exclusion EXCLUSION, -e EXCLUSION
                         sample IDs to exclude (comma separated) (default: )
 ```
+| option           |required | 概要                     |default                           |
+|:-----------------|:--------|:-------------------------|:---------------------------------|
+|--flowcellid/-fc  |True     |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字 |None |
+|--project_type/-t |False    |解析種別。both,eWES,WTSから選択                   |both        |
+|--directory/-d    |False    |解析フォルダの親ディレクトリ |/data1/data/result                |
+|--outdir/-o       |False    |結果の出力先ディレクトリ     |/data1/work/monitoring/benchmark |
+|--inclusion/-i    |False    |出力するSample IDを限定。カンマ区切りで複数指定可能 |None        |
+|--exclusion/-e    |False    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None        |
+
+⇒ /data1/work/monitoring/benchmark/[batchfolder].xlsx が作成される
