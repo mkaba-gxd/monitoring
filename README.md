@@ -102,12 +102,12 @@ optional arguments:
 | option           |required | 概要                     |default             |
 |:-----------------|:--------|:-------------------------|:-------------------|
 |--sample/-s       |True     |Sample ID。複数指定不可    |None                |
-|--verbose/-v      |False    |詳細表示を行う             |None                |
+|--verbose/-v      |False    |詳細を表示するかどうか      |False               |
 |--analysis_dir/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result |
 
 ⇒ sequenceの組合せ総数がディスプレイに表示される\
-2025/4/24 時点での組合せ総数の最大11,049,185に対し、STAR-SEQRの所要時間は 44:29:04\
-2025/6/2 時点での組合せ総数の最大30,473,853に対し、STAR-SEQRの所要時間は 166:37:57
+2025/4/24 時点：組合せ総数の最大11,049,185に対し、STAR-SEQRの所要時間は 44:29:04\
+2025/6/2 時点：組合せ総数の最大30,473,853に対し、STAR-SEQRの所要時間は 166:37:57
 
 ## 4\. Alternative Splicing
 BAMファイルからEGFR, MET,AR領域のdepthを計測し、exon領域とともに描画する。
