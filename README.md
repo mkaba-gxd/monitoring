@@ -55,16 +55,18 @@ PC,NCを除いた各サンプルについて、解析で採用されたbin size�
 PC,NCを除く全サンプルの情報を書き出す場合
 ```
 flowcellid=""
-inc_ID=""
-exc_ID=""
 singularity exec --bind /data1 $img python $SCRIPT CNV -fc $flowcellid
 ```
 除外するサンプルIDがある場合（comma区切りで複数指定可）
 ```
+flowcellid=""
+exc_ID=""
 singularity exec --bind /data1 $img python $SCRIPT CNV -fc $flowcellid --exclusion $exc_ID
 ```
 限定したいサンプルIDがある場合（comma区切りで複数指定可）
 ```
+flowcellid=""
+inc_ID=""
 singularity exec --bind /data1 $img python $SCRIPT CNV -fc $flowcellid --inclusion $inc_ID
 ```
 ⇒ /data1/work/monitoring/PureCN/[batchfolder].tsv が作成される
@@ -102,7 +104,7 @@ singularity exec --bind /data1 $img python $SCRIPT FS -s $sample
 ⇒ sequenceの組合せ総数がディスプレイに表示される
 ### オプションの詳細
 ```
-$ singularity exec --bind /data1 $img python $SCRIPT FS --help
+$ singularity exec --bind /data1 $img python $SCRIPT fusion --help
 version: v1.0.0
 usage: monitoring.py fusion [-h] --sample SAMPLE [--verbose] [--analysis_dir ANALYSIS_DIR]
 
@@ -124,7 +126,7 @@ singularity exec --bind /data1 $img python $SCRIPT AS -s $sample -c EGFR,MET,AR
 ⇒ /data1/work/monitoring/splice/[sample]\_dnacopy\_[EGFR/MET/AR].pdf が作成される。
 ### オプションの詳細
 ```
-$ singularity exec --bind /data1 $img python $SCRIPT AS --help
+$ singularity exec --bind /data1 $img python $SCRIPT splice --help
 version: v1.0.0
 usage: monitoring.py splice [-h] --sample SAMPLE --category CATEGORY [--analysis_dir ANALYSIS_DIR] [--outdir OUTDIR]
 
@@ -145,22 +147,24 @@ Filer前の解析結果データを作成する。\
 PC,NCを除く全サンプルの情報を書き出す場合
 ```
 flowcellid=""
-inc_ID=""
-exc_ID=""
 singularity exec --bind /data1 $img python $SCRIPT PRE -fc $flowcellid
 ```
 除外するサンプルIDがある場合（comma区切りで複数指定可）
 ```
+flowcellid=""
+exc_ID=""
 singularity exec --bind /data1 $img python $SCRIPT PRE -fc $flowcellid --exclusion $exc_ID
 ```
 限定したいサンプルIDがある場合（comma区切りで複数指定可）
 ```
+flowcellid=""
+inc_ID=""
 singularity exec --bind /data1 $img python $SCRIPT PRE -fc $flowcellid --inclusion $inc_ID
 ```
 ⇒ /data1/work/monitoring/preFilter/[batchfolder] の下に複数のxlsxファイルが作成される
 ### オプションの詳細
 ```
-$ singularity exec --bind /data1 $img python $SCRIPT PRE --help
+$ singularity exec --bind /data1 $img python $SCRIPT preFilter --help
 version: v1.0.0
 usage: monitoring.py preFilter [-h] --flowcellid FLOWCELLID [--directory DIRECTORY] [--project_type {both,WTS,eWES}]
                                [--outdir OUTDIR] [--inclusion INCLUSION] [--exclusion EXCLUSION]
@@ -185,22 +189,24 @@ optional arguments:
 PC,NCを除く全サンプルの情報を書き出す場合
 ```
 flowcellid=""
-inc_ID=""
-exc_ID=""
 singularity exec --bind /data1 $img python $SCRIPT BM -fc $flowcellid
 ```
 除外するサンプルIDがある場合（comma区切りで複数指定可）
 ```
+flowcellid=""
+exc_ID=""
 singularity exec --bind /data1 $img python $SCRIPT BM -fc $flowcellid --exclusion $exc_ID
 ```
 限定したいサンプルIDがある場合（comma区切りで複数指定可）
 ```
+flowcellid=""
+inc_ID=""
 singularity exec --bind /data1 $img python $SCRIPT BM -fc $flowcellid --inclusion $inc_ID
 ```
 ⇒ /data1/work/monitoring/benchmark/[batchfolder].xlsx が作成される
 ### オプションの詳細
 ```
-$ singularity exec --bind /data1 $img python $SCRIPT BM --help
+$ singularity exec --bind /data1 $img python $SCRIPT benchmark --help
 version: v1.0.0
 usage: monitoring.py benchmark [-h] --flowcellid FLOWCELLID [--project_type {both,WTS,eWES}] [--directory DIRECTORY]
                                [--outdir OUTDIR] [--inclusion INCLUSION] [--exclusion EXCLUSION]
