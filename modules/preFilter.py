@@ -228,8 +228,8 @@ def run_preFilter(args):
                 data = data[use_columns_ewes].drop_duplicates()
                 data['Clinvar_CLNSIG'] = data['Clinvar_CLNSIG'].astype(str).replace("nan", None)
                 data['ONCOKB_ONCOGENICITY'] = data['ONCOKB_ONCOGENICITY'].astype(str).replace("nan", None)
-                data['REPORT'] = np.where(data['Clinvar_CLNSIG'].str.contains('Pathogenic|Likely_pathogenic', case=True, na=False, regex=False),'PASS',
-                                np.where(data['ONCOKB_ONCOGENICITY'].str.contains('oncogenic|resistance', case=False, na=False, regex=False),'PASS',''))
+                data['REPORT'] = np.where(data['Clinvar_CLNSIG'].str.contains('Pathogenic|Likely_pathogenic', case=True, na=False),'PASS',
+                                np.where(data['ONCOKB_ONCOGENICITY'].str.contains('oncogenic|resistance', case=False, na=False),'PASS',''))
                 data = pd.merge(data, var_tbl, how='left', on='SYMBOL')
 #                data['ONCOKB_REFSEQ_MATCH'] = np.where((data['ONCOKB_REFSEQ'].notna()) & (data['MANE_SELECT'].str.split('.').str[0] != data['ONCOKB_REFSEQ']),'MISMATCH', '')
 #                data['ONCOKB_GENCODE_MATCH'] = np.where((data['ONCOKB_GENCODE'].notna()) & (data['Feature'].notna()) & (data['Feature'].str.split('.').str[0] != data['ONCOKB_GENCODE']),'MISMATCH', '')
