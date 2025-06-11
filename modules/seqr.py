@@ -10,36 +10,6 @@ import numpy as np
 from pathlib import Path
 from .func import *
 
-'''
-def batch(sample, anal_dir):
-
-    tbl = getinfo(subname_query(sample))
-    if tbl.shape[0] == 0 : init("Unregistered sample ID.")
-    subname = tbl.sub_name[0]
-    anal_type = tbl.PRJ_TYPE[0]
-    if anal_type != 'WTS' : init("Analysis type is not WTS")
-    anal_dir = Path(os.path.join(anal_dir, anal_type))
-    fcDirs = [fcDir for fcDir in anal_dir.iterdir() if fcDir.name.endswith(subname)]
-    fcDirs.sort()
-
-    return os.path.basename(fcDirs[-1])
-
-def subname_query(sample):
-    query = f"""
-    SELECT concat(tesh.equip_side, tesh.fc_id) AS sub_name, gp.PRJ_TYPE
-    FROM gxd.tb_expr_seq_header tesh
-    INNER JOIN gxd.gc_qc_sample gqs
-    ON tesh.run_id = gqs.run_id
-    INNER JOIN gxd.gc_project gp
-    ON gqs.SAMPLE_ID = gp.SAMPLE_ID
-    INNER JOIN gxd.gc_history_log ghl
-    ON gqs.SAMPLE_ID = ghl.SAMPLE_ID
-    AND ghl.idx = (SELECT MAX(idx) FROM gc_history_log WHERE SAMPLE_ID = gqs.SAMPLE_ID)
-    WHERE ghl.SAMPLE_ID = '{sample}'
-    """
-    return query
-'''
-
 def read_line(file_path):
     if not os.path.isfile(file_path) : return 0
     cmd = f"wc -l {file_path}"

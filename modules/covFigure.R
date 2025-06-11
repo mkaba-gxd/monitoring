@@ -758,7 +758,11 @@ drawCoverageFigureAll <- function(depth.file, target.txt.file, output){
 
 #source('covFigure.R')
 
-library(GenomicAlignments)
+suppressMessages({
+  suppressPackageStartupMessages({
+    library(GenomicAlignments)
+  })
+})
 
 args <- (commandArgs(TRUE))
 
