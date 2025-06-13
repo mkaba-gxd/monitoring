@@ -81,6 +81,10 @@ def batch(sample, anal_dir):
 
     return os.path.basename(fcDirs[-1])
 
+def rmdup_list(lst):
+    seen = set()
+    return [x for x in lst if not (x in seen or seen.add(x))]
+
 def init(msg="No matching data found.", parser=None):
     print(msg)
     if parser :

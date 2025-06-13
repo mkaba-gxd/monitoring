@@ -159,6 +159,9 @@ def run_preFilter(args):
     inclusion = [x.strip() for x in args.inclusion.split(',') if not x.strip() == '']
     exclusion = [x.strip() for x in args.exclusion.split(',') if not x.strip() == '']
 
+    inclusion = rmdup_list(inclusion)
+    exclusion = rmdup_list(exclusion)
+
     if len(inclusion) > 0 and len(exclusion) > 0 :
         init('ERROR: Inclusion and exclusion cannot be specified simultaneously.')
 

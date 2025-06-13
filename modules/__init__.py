@@ -7,9 +7,6 @@ from .preFilter import *
 from .benchmark import *
 
 __all__ = [
-    "getinfo",
-    "fcDir_table",
-    "init",
     "run_qc",
     "run_cnv",
     "run_seqr",
