@@ -260,7 +260,7 @@ def run_preFilter(args):
                 if not os.path.isfile(file):
                     print('file not exists: ' + file)
                     continue
-                data = pd.read_csv(file, sep="\t")
+                data = pd.read_csv(file, sep="\t", low_memory=False)
                 data = data[use_columns_ewes].drop_duplicates()
                 try:
                     with pd.ExcelWriter(out_file_2, mode="a", engine="openpyxl", if_sheet_exists="replace") as writer :
@@ -298,7 +298,7 @@ def run_preFilter(args):
                     print('file not exists: ' + file)
                     data_f = pd.DataFrame(columns=use_columns_wts_1)
                 else:
-                    data = pd.read_csv(file, sep="\t")
+                    data = pd.read_csv(file, sep="\t", low_memory=False)
                     data_f = data[['FILTER_ONCOKB','gene1','gene2','chr1','breakpoint_1','chr2','breakpoint_2','max_split_cnt','max_span_cnt','sample_type','disease','tools','inferred_fusion_type','samples','cancer_db_hits','fusion_IDs']]
                     data_f = data_f.drop_duplicates()
                     data_f = expand_breakpoints(data_f)
@@ -321,7 +321,7 @@ def run_preFilter(args):
                     print('file not exists: ' + file)
                     data = pd.DataFrame()
                 else :
-                    data = pd.read_csv(file, sep="\t")
+                    data = pd.read_csv(file, sep="\t", low_memory=False)
                     data = data.rename(columns={'#gene1':'gene1'})
                     data['cancer_db_hits'] = data['cancer_db_hits'].astype(str)
                     data = expand_breakpoints(data)
@@ -354,6 +354,9 @@ def run_preFilter(args):
                     add_info(out_file_2, item['SAMPLE_ID'], [['Specimen_ID',item['PATH_NO']], ['Cancer_Type',item['DIAGNOSIS_NAME']]]+as_result)
                 else :
                     add_info(out_file_2, item['SAMPLE_ID'], [['Specimen_ID',item['PATH_NO']], ['Cancer_Type',item['DIAGNOSIS_NAME']]])
+
+                coloring(out_file_2, sheet_name=item['SAMPLE_ID'], column='OncoKB', val='PASS', color="FFFF00")
+
 
                 file = os.path.join(anal_dir, item['SAMPLE_ID'], 'Alternative_splicing', 'ESDetector', item['SAMPLE_ID']+'.exon_skipped.tsv')
                 if not os.path.isfile(file):
