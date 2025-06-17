@@ -54,6 +54,8 @@ PC,NCを除いた各サンプルについて、解析で採用されたbin size�
 ```
 $ monitoring CNV --flowcellid <flowcellid>
 ```
+⇒ /data1/work/monitoring/PureCN/[batchfolder].tsv が作成される。\
+*すでに出力ファイルが存在する場合は上書きする。
 ### オプションの詳細
 ```
 $ monitoring CNV --help
@@ -81,9 +83,6 @@ optional arguments:
 |--directory/-d   |False    |解析フォルダの親ディレクトリ |/data1/data/result            |
 |--outdir/-o      |False    |結果の出力先ディレクトリ     |/data1/work/monitoring/PureCN |
 
-⇒ /data1/work/monitoring/PureCN/[batchfolder].tsv が作成される。\
-*すでに出力ファイルが存在する場合は上書きする。
-
 ## 3\. fusion（STAR-SEQR）
 STAR-RSEQの実行時間の目安となる sequenceの組合せ総数を算出する。\
 値が 10^6 未満なら数時間で終了する可能性が高い。
@@ -91,6 +90,9 @@ STAR-RSEQの実行時間の目安となる sequenceの組合せ総数を算出�
 $ monitoring fusion --sample <sample>
 $ monitoring FS -s <sample>
 ```
+⇒ sequenceの組合せ総数がディスプレイに表示される\
+2025/4/24 時点：組合せ総数の最大11,049,185に対し、STAR-SEQRの所要時間は 44:29:04\
+2025/6/2 時点：組合せ総数の最大30,473,853に対し、STAR-SEQRの所要時間は 166:37:57
 ### オプションの詳細
 ```
 $ monitoring fusion --help
@@ -110,10 +112,6 @@ optional arguments:
 |--sample/-s       |True     |Sample ID。複数指定不可    |None                |
 |--verbose/-v      |False    |詳細を表示するかどうか      |False               |
 |--analysis_dir/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result |
-
-⇒ sequenceの組合せ総数がディスプレイに表示される\
-2025/4/24 時点：組合せ総数の最大11,049,185に対し、STAR-SEQRの所要時間は 44:29:04\
-2025/6/2 時点：組合せ総数の最大30,473,853に対し、STAR-SEQRの所要時間は 166:37:57
 
 ## 4\. splice（Alternative Splicing）
 BAMファイルからEGFR, MET,AR領域のdepthを計測し、exon領域とともに描画する。
@@ -153,6 +151,7 @@ Filter前の解析データをExcel出力する。
 $ monitoring preFilter --flowcellid <flowcellid>
 $ monitoring PRE -fc <flowcellid>
 ```
+⇒ /data1/work/monitoring/preFilter/[batchfolder] の下に複数の.xlsxファイルが作成される
 ### オプションの詳細
 ```
 $ monitoring preFilter --help
@@ -183,14 +182,14 @@ optional arguments:
 |--inclusion/-i    |False    |出力するSample IDを限定。カンマ区切りで複数指定可能 |None        |
 |--exclusion/-e    |False    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None        |
 
-⇒ /data1/work/monitoring/preFilter/[batchfolder] の下に複数の.xlsxファイルが作成される
-
 ## 6\. benchmark
 解析工程でBenchmarkフォルダに出力される各工程の所要時間(h:m:sの値)のテーブルをファイル出力する。
 ```
 $ monitoring benchmark --flowcellid <flowcellid>
 $ monitoring BM -fc <flowcellid>
 ```
+⇒ /data1/work/monitoring/benchmark/[batchfolder].xlsx が作成される\
+*すでに出力ファイルが存在する場合は上書きする。
 ### オプションの詳細
 ```
 $ monitoring benchmark --help
@@ -220,6 +219,3 @@ optional arguments:
 |--outdir/-o       |False    |結果の出力先ディレクトリ     |/data1/work/monitoring/benchmark |
 |--inclusion/-i    |False    |出力するSample IDを限定。カンマ区切りで複数指定可能 |None        |
 |--exclusion/-e    |False    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None        |
-
-⇒ /data1/work/monitoring/benchmark/[batchfolder].xlsx が作成される\
-*すでに出力ファイルが存在する場合は上書きする。
