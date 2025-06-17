@@ -45,12 +45,15 @@ monitoring <command> --help
 スクリプトを実行した時点でデータベースに登録されている全検体のQC情報の一覧を作成する。\
 QC項目はOncoStationで確認できる項目と同じ。
 ```
-monitoring QC
+$ monitoring QC
 ```
 ⇒ /data1/work/monitoring/QC/[timestamp].xlsx が作成される
 
 ## 2\. CNV（Copy Number Variants/PureCN）
 PC,NCを除いた各サンプルについて、解析で採用されたbin sizeと bin size 400/800/1600 のPureCNで算出されたpurityとploidyの一覧を出力する。
+```
+$ monitoring CNV --flowcellid <flowcellid>
+```
 ### オプションの詳細
 ```
 $ monitoring CNV --help
