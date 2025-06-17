@@ -9,15 +9,15 @@ CAP検査（eWES/WTS）で実施された解析について、モニタリング
 | preFilter, PRE | フィルター前データ作成             |
 | benchmark, BM  | 工程所要時間の一覧作成             |
 
-## 変数の定義(共通)
-```bash
-img=/data1/labTools/labTools.sif
-SCRIPT=/data1/labTools/monitoring/latest/monitoring.py
+## エイリアスの作成 ※初回のみ
+~/bin フォルダ直下に以下のコマンドを記載したテキストファイル monitoring を作成し、実行権限を付与する。
+エイリアスを作成しない場合は、singularity でコンテナとスクリプトファイルを指定して実行する。
 ```
-## マニュアルの表示
-全体の概要表示
-```bash
-$ singularity exec --bind /data1 $img python $SCRIPT --help
+singularity exec --disable-cache --bind /data1 /data1/labTools/labTools.sif python /data1/labTools/monitoring/latest/monitoring.py $@
+```
+helpページを表示してエイリアスの設定を確認する。以下が表示されればOK。
+```
+$ monitoring -h
 version: v1.0.0
 usage: monitoring.py [-h] [--version] {QC,CNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM} ...
 
@@ -38,14 +38,14 @@ optional arguments:
 ```
 コマンド別の詳細表示
 ```
-singularity exec --bind /data1 $img python $SCRIPT <command> --help
+monitoring <command> --help
 ```
 
 ## 1\. QC値
 スクリプトを実行した時点でデータベースに登録されている全検体のQC情報の一覧を作成する。\
 QC項目はOncoStationで確認できる項目と同じ。
 ```
-singularity exec --bind /data1 $img python $SCRIPT QC
+monitoring QC
 ```
 ⇒ /data1/work/monitoring/QC/[timestamp].xlsx が作成される
 
@@ -53,7 +53,7 @@ singularity exec --bind /data1 $img python $SCRIPT QC
 PC,NCを除いた各サンプルについて、解析で採用されたbin sizeと bin size 400/800/1600 のPureCNで算出されたpurityとploidyの一覧を出力する。
 ### オプションの詳細
 ```
-$ singularity exec --bind /data1 $img python $SCRIPT CNV --help
+$ monitoring CNV --help
 version: v1.0.0
 usage: monitoring.py CNV [-h] --flowcellid FLOWCELLID [--inclusion INCLUSION] [--exclusion EXCLUSION]
                          [--directory DIRECTORY] [--outdir OUTDIR]
@@ -84,9 +84,13 @@ optional arguments:
 ## 3\. fusion（STAR-SEQR）
 STAR-RSEQの実行時間の目安となる sequenceの組合せ総数を算出する。\
 値が 10^6 未満なら数時間で終了する可能性が高い。
+```
+$ monitoring fusion --sample <sample>
+$ monitoring FS -s <sample>
+```
 ### オプションの詳細
 ```
-$ singularity exec --bind /data1 $img python $SCRIPT fusion --help
+$ monitoring fusion --help
 version: v1.0.0
 usage: monitoring.py fusion [-h] --sample SAMPLE [--verbose] [--analysis_dir ANALYSIS_DIR]
 
@@ -110,9 +114,13 @@ optional arguments:
 
 ## 4\. splice（Alternative Splicing）
 BAMファイルからEGFR, MET,AR領域のdepthを計測し、exon領域とともに描画する。
+```
+monitoring splice --sample <sample>
+monitoring AS -s <sample>
+```
 ### オプションの詳細
 ```
-$ singularity exec --bind /data1 $img python $SCRIPT splice --help
+$ monitoring splice --help
 version: v1.0.0
 usage: monitoring.py splice [-h] --sample SAMPLE [--category CATEGORY]
                             [--analysis_dir ANALYSIS_DIR] [--outdir OUTDIR]
@@ -138,9 +146,13 @@ optional arguments:
 
 ## 5\. preFilter
 Filter前の解析データをExcel出力する。
+```
+$ monitoring preFilter --flowcellid <flowcellid>
+$ monitoring PRE -fc <flowcellid>
+```
 ### オプションの詳細
 ```
-$ singularity exec --bind /data1 $img python $SCRIPT preFilter --help
+$ monitoring preFilter --help
 version: v1.0.0
 usage: monitoring.py preFilter [-h] --flowcellid FLOWCELLID [--directory DIRECTORY] [--project_type {both,WTS,eWES}]
                                [--outdir OUTDIR] [--inclusion INCLUSION] [--exclusion EXCLUSION]
@@ -172,9 +184,13 @@ optional arguments:
 
 ## 6\. benchmark
 解析工程でBenchmarkフォルダに出力される各工程の所要時間(h:m:sの値)のテーブルをファイル出力する。
+```
+$ monitoring benchmark --flowcellid <flowcellid>
+$ monitoring BM -fc <flowcellid>
+```
 ### オプションの詳細
 ```
-$ singularity exec --bind /data1 $img python $SCRIPT benchmark --help
+$ monitoring benchmark --help
 version: v1.0.0
 usage: monitoring.py benchmark [-h] --flowcellid FLOWCELLID [--project_type {both,WTS,eWES}] [--directory DIRECTORY]
                                [--outdir OUTDIR] [--inclusion INCLUSION] [--exclusion EXCLUSION]
