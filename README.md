@@ -1,13 +1,13 @@
 # monitoring ツール
-CAP検査（eWES/WTS）で実施された解析について、モニタリングを行う。
-| command        | 概要                             |
-|:---------------|:---------------------------------|
+CAP検査（eWES/WTS）で実施された解析について、モニタリングを行う。指定されたsample IDやflowcell IDから検体情報をデータベースに問合せ、解析ディレクトリ内のデータをロードするため、データベースに登録がない検体や、規程の場所に解析データやログファイルがない検体に対しては実行できません。
+| command        | 概要                              |
+|:---------------|:----------------------------------|
 | QC             | WET,DRY工程のQC値一覧作成         |
 | CNV            | (PureCN) purity, ploidyの一覧作成 |
 | fusion, FS     | (STAR-SEQR) 所要時間の推定        |
 | splice, AS     | EGFR, MET, AR 領域のdepthを描画   |
-| preFilter, PRE | フィルター前データ作成             |
-| benchmark, BM  | 工程所要時間の一覧作成             |
+| preFilter, PRE | フィルター前データ作成            |
+| benchmark, BM  | 工程所要時間の一覧作成            |
 
 ## エイリアスの作成 ※初回のみ
 ~/bin フォルダ直下に以下のコマンドを記載したテキストファイル monitoring を作成し、実行権限を付与する。
@@ -17,7 +17,7 @@ singularity exec --disable-cache --bind /data1 /data1/labTools/labTools.sif pyth
 ```
 helpページを表示してエイリアスの設定を確認する。以下が表示されればOK。
 ```
-$ monitoring -h
+$ monitoring --help
 version: v1.0.0
 usage: monitoring.py [-h] [--version] {QC,CNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM} ...
 
@@ -55,7 +55,7 @@ PC,NCを除いた各サンプルについて、解析で採用されたbin size�
 $ monitoring CNV --flowcellid <flowcellid>
 ```
 ⇒ /data1/work/monitoring/PureCN/[batchfolder].tsv が作成される。\
-*すでに出力ファイルが存在する場合は上書きする。
+※ すでに出力ファイルが存在する場合は上書きする。
 ### オプションの詳細
 ```
 $ monitoring CNV --help
@@ -77,10 +77,10 @@ optional arguments:
 ```
 | option          |required | 概要                     |default                       |
 |:----------------|:-------:|:-------------------------|:-----------------------------|
-|--flowcellid/-fc |True     |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字   |None |
-|--inclusion/-i   |False    |出力するSample IDを限定。カンマ区切りで複数指定可能 |None    |
-|--exclusion/-e   |False    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None    |
-|--directory/-d   |False    |解析フォルダの親ディレクトリ |/data1/data/result            |
+|--flowcellid/-fc |True     |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字 |None |
+|--inclusion/-i   |False    |出力するSample IDを限定。カンマ区切りで複数指定可能 |None  |
+|--exclusion/-e   |False    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None  |
+|--directory/-d   |False    |解析フォルダの親ディレクトリ |/data1/data/result           |
 |--outdir/-o      |False    |結果の出力先ディレクトリ     |/data1/work/monitoring/PureCN |
 
 ## 3\. fusion（STAR-SEQR）
@@ -189,7 +189,7 @@ $ monitoring benchmark --flowcellid <flowcellid>
 $ monitoring BM -fc <flowcellid>
 ```
 ⇒ /data1/work/monitoring/benchmark/[batchfolder].xlsx が作成される\
-*すでに出力ファイルが存在する場合は上書きする。
+※ すでに出力ファイルが存在する場合は上書きする。
 ### オプションの詳細
 ```
 $ monitoring benchmark --help
