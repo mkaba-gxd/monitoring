@@ -1,5 +1,6 @@
 # monitoring ツール
-CAP検査（eWES/WTS）で実施された解析について、モニタリングを行う。指定されたsample IDやflowcell IDから検体情報をデータベースに問合せ、解析ディレクトリ内のデータをロードするため、データベースに登録がない検体や、規程の場所に解析データやログファイルがない検体に対しては実行できません。
+CAP検査（eWES/WTS）で実施された解析について、モニタリングを行う。\
+指定されたsample IDやflowcell IDから検体情報をデータベースに問合せ、解析ディレクトリ内のデータをロードするため、データベースに登録がない検体や、規程の場所に解析データやログファイルがない検体に対しては実行できません。
 | command        | 概要                              |
 |:---------------|:----------------------------------|
 | QC             | WET,DRY工程のQC値一覧作成         |
@@ -10,7 +11,8 @@ CAP検査（eWES/WTS）で実施された解析について、モニタリング
 | benchmark, BM  | 工程所要時間の一覧作成            |
 
 ## エイリアスの作成 ※初回のみ
-~/bin フォルダ直下に以下のコマンドを記載したテキストファイル monitoring を作成し、実行権限を付与する。
+~/bin フォルダ直下に以下のコマンドを記載したテキストファイル monitoring を作成し、実行権限を付与する。\
+(gxd_pipeline, guest_user ユーザーには実装済み) \
 エイリアスを作成しない場合は、singularity でコンテナとスクリプトファイルを指定して実行する。
 ```
 singularity exec --disable-cache --bind /data1 /data1/labTools/labTools.sif python /data1/labTools/monitoring/latest/monitoring.py $@
@@ -56,6 +58,11 @@ $ monitoring CNV --flowcellid <flowcellid>
 ```
 ⇒ /data1/work/monitoring/PureCN/[batchfolder].tsv が作成される。\
 ※ すでに出力ファイルが存在する場合は上書きする。
+<details>
+  <summary> 
+    More Details
+  </summary>
+
 ### オプションの詳細
 ```
 $ monitoring CNV --help
@@ -83,6 +90,8 @@ optional arguments:
 |--directory/-d   |False    |解析フォルダの親ディレクトリ |/data1/data/result           |
 |--outdir/-o      |False    |結果の出力先ディレクトリ     |/data1/work/monitoring/PureCN |
 
+</details>
+
 ## 3\. fusion（STAR-SEQR）
 STAR-RSEQの実行時間の目安となる sequenceの組合せ総数を算出する。\
 値が 10^6 未満なら数時間で終了する可能性が高い。
@@ -93,6 +102,11 @@ $ monitoring FS -s <sample>
 ⇒ sequenceの組合せ総数がディスプレイに表示される\
 2025/4/24 時点：組合せ総数の最大11,049,185に対し、STAR-SEQRの所要時間は 44:29:04\
 2025/6/2 時点：組合せ総数の最大30,473,853に対し、STAR-SEQRの所要時間は 166:37:57
+<details>
+  <summary> 
+    More Details
+  </summary>
+  
 ### オプションの詳細
 ```
 $ monitoring fusion --help
@@ -113,12 +127,20 @@ optional arguments:
 |--verbose/-v      |False    |詳細を表示するかどうか      |False               |
 |--analysis_dir/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result |
 
+</details>
+
 ## 4\. splice（Alternative Splicing）
 BAMファイルからEGFR, MET,AR領域のdepthを計測し、exon領域とともに描画する。
 ```
 monitoring splice --sample <sample>
 monitoring AS -s <sample>
 ```
+⇒ /data1/work/monitoring/splice/[sample]\_dnacopy\_[EGFR/MET/AR].pdf が作成される。
+<details>
+  <summary> 
+    More Details
+  </summary>
+
 ### オプションの詳細
 ```
 $ monitoring splice --help
@@ -143,7 +165,7 @@ optional arguments:
 |--analysis_dir/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result        |
 |--outdir/-o       |False    |結果の出力先ディレクトリ |/data1/work/monitoring/splice |
 
-⇒ /data1/work/monitoring/splice/[sample]\_dnacopy\_[EGFR/MET/AR].pdf が作成される。
+</details>
 
 ## 5\. preFilter
 Filter前の解析データをExcel出力する。
@@ -152,6 +174,11 @@ $ monitoring preFilter --flowcellid <flowcellid>
 $ monitoring PRE -fc <flowcellid>
 ```
 ⇒ /data1/work/monitoring/preFilter/[batchfolder] の下に複数の.xlsxファイルが作成される
+<details>
+  <summary> 
+    More Details
+  </summary>
+
 ### オプションの詳細
 ```
 $ monitoring preFilter --help
@@ -182,6 +209,8 @@ optional arguments:
 |--inclusion/-i    |False    |出力するSample IDを限定。カンマ区切りで複数指定可能 |None        |
 |--exclusion/-e    |False    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None        |
 
+</details>
+
 ## 6\. benchmark
 解析工程でBenchmarkフォルダに出力される各工程の所要時間(h:m:sの値)のテーブルをファイル出力する。
 ```
@@ -190,6 +219,11 @@ $ monitoring BM -fc <flowcellid>
 ```
 ⇒ /data1/work/monitoring/benchmark/[batchfolder].xlsx が作成される\
 ※ すでに出力ファイルが存在する場合は上書きする。
+<details>
+  <summary> 
+    More Details
+  </summary>
+  
 ### オプションの詳細
 ```
 $ monitoring benchmark --help
@@ -219,3 +253,5 @@ optional arguments:
 |--outdir/-o       |False    |結果の出力先ディレクトリ     |/data1/work/monitoring/benchmark |
 |--inclusion/-i    |False    |出力するSample IDを限定。カンマ区切りで複数指定可能 |None        |
 |--exclusion/-e    |False    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None        |
+
+</details>
