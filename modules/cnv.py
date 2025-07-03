@@ -1,37 +1,46 @@
 import pandas as pd
+import datetime
 from .func import *
 
+def remove_dup_list(lst):
+    seen = set()
+    return [x for x in lst if not (x in seen or seen.add(x))]
 
-def load_value(file):
-    try :
-        data = pd.read_csv(file, header=0)
-        return data[['Purity','Ploidy']].values.tolist()[0]
-    except Exception as e:
-        return [ 'NA', 'NA' ]
+def m3_query() :
+    query = f"""
+    SELECT tesh.run_id, concat(tesh.equip_side, tesh.fc_id) AS sub_name, gp.PRJ_TYPE, gp.DIAGNOSIS_NAME, gp.PATIENT_NO, gp.SAMPLE_ID
+    FROM gxd.tb_expr_seq_header tesh
+    INNER JOIN gxd.gc_qc_sample gqs
+    ON tesh.run_id = gqs.run_id
+    INNER JOIN gxd.gc_project gp
+    ON gqs.SAMPLE_ID = gp.SAMPLE_ID
+    INNER JOIN gxd.gc_history_log ghl
+    ON gqs.SAMPLE_ID = ghl.SAMPLE_ID
+    AND ghl.idx = (SELECT MAX(idx) FROM gc_history_log WHERE SAMPLE_ID = gqs.SAMPLE_ID)
+    WHERE gp.PRJ_TYPE = 'EWES' AND ghl.ANAL_STATUS ='102'
+    """
+    return query
 
 def run_cnv(args):
 
-    flowcellid = args.flowcellid
+    genes = [x.strip() for x in args.genes.split(',') if not x.strip() == '']
     directory = args.directory
     outdir = args.outdir
-    inclusion = [x.strip() for x in args.inclusion.split(',') if not x.strip() == '']
     exclusion = [x.strip() for x in args.exclusion.split(',') if not x.strip() == '']
-
-    inclusion = rmdup_list(inclusion)
     exclusion = rmdup_list(exclusion)
 
-    if len(inclusion) > 0 and len(exclusion) > 0:
-        print('ERROR: Inclusion and exclusion cannot be specified simultaneously.')
-        parser.print_help()
-        sys.exit(1)
+    now = datetime.datetime.now()
+    out_file = os.path.join(outdir, now.strftime("%Y%m%d%H%M") + '.xlsx')
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
 
-    df_info = getinfo(SelectData(flowcellid))
+    genes = remove_dup_list(genes)
+    if len(genes) == 0: init('Gene name input value error')
+
+    df_info = getinfo(m3_query())
     if df_info.shape[0] == 0 : init()
-
-    if len(inclusion) > 0:
-        print ("inclusion sample:" + "\n".join(inclusion))
-        df_info = df_info[ df_info['SAMPLE_ID'].isin(inclusion)]
-        if df_info.shape[0] == 0 : init("No corresponding sample IDs.")
+    df_info = df_info[ df_info['PATIENT_NO'].str.match( r'^M3\d{7}$', na=False) ]
+    if df_info.shape[0] == 0 : init()
 
     if len(exclusion) > 0:
         print ("exclusion sample:" + ",".join(exclusion))
@@ -49,26 +58,46 @@ def run_cnv(args):
     if uniq_info.shape[0] == 0: init()
 
     df_info = pd.merge(df_info, uniq_info, on=['sub_name','PRJ_TYPE'])
-    anal_dir = os.path.join(directory,"eWES",df_info['seqDir'][0])
 
-    out_df = pd.DataFrame(columns=['sample_id','bin_size','purity_400','ploidy_400','purity_800','ploidy_800','purity_1600','ploidy_1600'])
+    merge_data = None
+
     for i, item in df_info.iterrows() :
-        file = os.path.join(anal_dir, item['SAMPLE_ID'], 'CNV', 'PureCN', 'bin_size.txt')
+        anal_dir = os.path.join(directory,"eWES",item['seqDir'],item['SAMPLE_ID'],'CNV')
+        cnv_file = os.path.join(anal_dir, item['SAMPLE_ID'] + '.cnv.marked.tsv')
+
         try :
-            f = open(file, 'r')
-            fac = [item['SAMPLE_ID'], f.read()]
-            f.close()
+            df = pd.read_csv(cnv_file, sep="\t", header=0, low_memory=False)
+            df = df[['Gene_name','CHROM','START','END','gene.mean.CN']]
+            
+            filt = df[ df['Gene_name'].isin(genes) ].drop_duplicates().copy()
+            miss = list(set(genes) - set(filt['Gene_name']))
+
+            if miss :
+                na_rows = pd.DataFrame({'Gene_name': missing})
+                for col in df.columns:
+                    na_rows[col] = pd.NA
+                df = pd.concat([filt, na_rows], ignore_index=True)
+            else :
+                df = filt
+
+            df.insert(0, 'sample_id', item['SAMPLE_ID'])
+
+            if merge_data is None :
+                merge_data = df
+            else:
+                merge_data = pd.concat([merge_data, df], axis=0)
+
         except Exception as e:
-            print('CNV process has not been completed:' + item['SAMPLE_ID'])
-            fac = [item['SAMPLE_ID'], '-']
+            continue
 
-        for bin in ['400','800','1600']:
-            file = os.path.join(anal_dir, item['SAMPLE_ID'], 'CNV', 'PureCN', bin, item['SAMPLE_ID'] + '.tumour.exome.purecn.csv')
-            fac.extend( load_value(file) )
-
-        out_df.loc[out_df.shape[0]+1] = fac
-
-    os.makedirs(outdir, exist_ok=True)
-    out_df.to_csv(os.path.join(outdir, df_info['seqDir'][0] + '.tsv'), header=True, index=False, sep="\t")
+    for g in genes :
+        df_g = merge_data[ merge_data['Gene_name']==g ]
+        df_g = df_g.sort_values(['sample_id']).reset_index(drop=True)
+        try :
+            with pd.ExcelWriter(out_file, mode="a", engine="openpyxl", if_sheet_exists="replace") as writer :
+                df_g.to_excel(writer, sheet_name=g, index=False)
+        except FileNotFoundError:
+            with pd.ExcelWriter(out_file, engine='openpyxl') as writer:
+                df_g.to_excel(writer, sheet_name=g, index=False)
 
 

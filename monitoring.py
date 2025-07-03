@@ -18,13 +18,21 @@ def main():
     parser_qc.add_argument("--output","-o", required=False, help="output file path", default="")
     parser_qc.set_defaults(func=run_qc)
 
-    # monitoring CNV (pureCN)
-    parser_cnv = subparsers.add_parser("CNV", help="CNV(PureCN) monitoring", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser_cnv.add_argument("--flowcellid","-fc", required=True, help="flowcell id")
-    parser_cnv.add_argument("--inclusion","-i", required=False, help="sample IDs to include (comma separated)", default="")
+    # monitoring pureCN
+    parser_pcn = subparsers.add_parser("pureCN", help="PureCN window size monitoring", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser_pcn.add_argument("--flowcellid","-fc", required=True, help="flowcell id")
+    parser_pcn.add_argument("--inclusion","-i", required=False, help="sample IDs to include (comma separated)", default="")
+    parser_pcn.add_argument("--exclusion","-e", required=False, help="sample IDs to exclude (comma separated)", default="")
+    parser_pcn.add_argument("--directory","-d", required=False, help="parent analytical directory", default="/data1/data/result")
+    parser_pcn.add_argument("--outdir","-o", required=False, help="output directory path", default="/data1/work/monitoring/PureCN")
+    parser_pcn.set_defaults(func=run_purecn)
+
+    # monitoring CNV
+    parser_cnv = subparsers.add_parser("CNV", help="Copy Numver  monitoring", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser_cnv.add_argument("--genes","-g", required=True, help="gene names (comma separated)", default="")
     parser_cnv.add_argument("--exclusion","-e", required=False, help="sample IDs to exclude (comma separated)", default="")
     parser_cnv.add_argument("--directory","-d", required=False, help="parent analytical directory", default="/data1/data/result")
-    parser_cnv.add_argument("--outdir","-o", required=False, help="output directory path", default="/data1/work/monitoring/PureCN")
+    parser_cnv.add_argument("--outdir","-o", required=False, help="output directory path", default="/data1/work/monitoring/CNV")
     parser_cnv.set_defaults(func=run_cnv)
 
     # monitoring Fusion (STAR-SEQR)
