@@ -29,7 +29,7 @@ def main():
 
     # monitoring CNV
     parser_cnv = subparsers.add_parser("CNV", help="Copy Numver  monitoring", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser_cnv.add_argument("--genes","-g", required=True, help="gene names (comma separated)", default="")
+    parser_cnv.add_argument("--genes","-g", required=True, help="gene names (comma separated) or file paths for a list of gene sets", default="")
     parser_cnv.add_argument("--exclusion","-e", required=False, help="sample IDs to exclude (comma separated)", default="")
     parser_cnv.add_argument("--directory","-d", required=False, help="parent analytical directory", default="/data1/data/result")
     parser_cnv.add_argument("--outdir","-o", required=False, help="output directory path", default="/data1/work/monitoring/CNV")
