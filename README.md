@@ -49,14 +49,14 @@ monitoring <command> --help
 スクリプトを実行した時点でデータベースに登録されている全検体のQC情報の一覧を作成する。\
 QC項目はOncoStationで確認できる項目と同じ。
 ```
-$ monitoring QC
+monitoring QC
 ```
 ⇒ /data1/work/monitoring/QC/[timestamp].xlsx が作成される
 
 ## 2\. pureCN
 PC,NCを除いた各サンプルについて、解析で採用されたbin sizeと、PureCNで算出された bin size 400/800/1600 のpurityとploidyの一覧を出力する。
 ```
-$ monitoring pureCN --flowcellid <flowcellid>
+monitoring pureCN --flowcellid <flowcellid>
 ```
 ⇒ /data1/work/monitoring/PureCN/[batchfolder].tsv が作成される。\
 ※ すでに出力ファイルが存在する場合は上書きする。
@@ -100,7 +100,7 @@ optional arguments:
 ※ スクリプトを実行した時点で解析が終了しているすべてのM3検体(Patient IDがM3から始まるもの)のコピー数を検索する。\
 ※ 解析フォルダに保存されている中間ファイルが削除されている場合は除外される。
 ```
-$ monitoring CNV --genes [GENES]
+monitoring CNV --genes [GENES]
 ```
 ⇒ /data1/work/monitoring/CNV/[timestamp].xlsx が作成される。
 <details>
@@ -138,8 +138,8 @@ optional arguments:
 STAR-RSEQの実行時間の目安となる sequenceの組合せ総数を算出する。\
 値が 10^6 未満なら数時間で終了する可能性が高い。
 ```
-$ monitoring fusion --sample <sample>
-$ monitoring FS -s <sample>
+monitoring fusion --sample <sample>
+monitoring FS -s <sample>
 ```
 ⇒ sequenceの組合せ総数がディスプレイに表示される\
 2025/4/24 時点：組合せ総数の最大11,049,185に対し、STAR-SEQRの所要時間は 44:29:04\
@@ -212,8 +212,8 @@ optional arguments:
 ## 6\. preFilter
 Filter前の解析データをExcel出力する。
 ```
-$ monitoring preFilter --flowcellid <flowcellid>
-$ monitoring PRE -fc <flowcellid>
+monitoring preFilter --flowcellid <flowcellid>
+monitoring PRE -fc <flowcellid>
 ```
 ⇒ /data1/work/monitoring/preFilter/[batchfolder] の下に複数の.xlsxファイルが作成される
 <details>
@@ -256,8 +256,8 @@ optional arguments:
 ## 7\. benchmark
 解析工程でBenchmarkフォルダに出力される各工程の所要時間(h:m:sの値)のテーブルをファイル出力する。
 ```
-$ monitoring benchmark --flowcellid <flowcellid>
-$ monitoring BM -fc <flowcellid>
+monitoring benchmark --flowcellid <flowcellid>
+monitoring BM -fc <flowcellid>
 ```
 ⇒ /data1/work/monitoring/benchmark/[batchfolder].xlsx が作成される\
 ※ すでに出力ファイルが存在する場合は上書きする。
