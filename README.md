@@ -1,14 +1,15 @@
 # monitoring ツール
 CAP検査（eWES/WTS）で実施された解析について、モニタリングを行う。\
 指定されたsample IDやflowcell IDから検体情報をデータベースに問合せ、解析ディレクトリ内のデータをロードするため、データベースに登録がない検体や、規程の場所に解析データやログファイルがない検体に対しては実行できません。
-| command        | 概要                              |
-|:---------------|:----------------------------------|
-| QC             | WET,DRY工程のQC値一覧作成         |
-| CNV            | (PureCN) purity, ploidyの一覧作成 |
-| fusion, FS     | (STAR-SEQR) 所要時間の推定        |
-| splice, AS     | EGFR, MET, AR 領域のdepthを描画   |
-| preFilter, PRE | フィルター前データ作成            |
-| benchmark, BM  | 工程所要時間の一覧作成            |
+|idx | command        | 概要                              |
+|:--:|:---------------|:----------------------------------|
+|1| QC             | WET,DRY工程のQC値一覧作成          |
+|2| pureCN         | PureCNで算出されたpurity, ploidyの一覧作成 |
+|3| CNV            | 指定した遺伝子セットのコピー数一覧を作成 |
+|4| fusion, FS     | (STAR-SEQR) 所要時間の推定         |
+|5| splice, AS     | EGFR, MET, AR 領域のdepthを描画    |
+|6| preFilter, PRE | フィルター前データ作成              |
+|7| benchmark, BM  | 工程所要時間の一覧作成              |
 
 ## エイリアスの作成 ※初回のみ
 ~/bin フォルダ直下に以下のコマンドを記載したテキストファイル monitoring を作成し、実行権限を付与する。\
@@ -51,10 +52,10 @@ $ monitoring QC
 ```
 ⇒ /data1/work/monitoring/QC/[timestamp].xlsx が作成される
 
-## 2\. CNV（Copy Number Variants/PureCN）
-PC,NCを除いた各サンプルについて、解析で採用されたbin sizeと bin size 400/800/1600 のPureCNで算出されたpurityとploidyの一覧を出力する。
+## 2\. pureCN
+PC,NCを除いた各サンプルについて、解析で採用されたbin sizeと、PureCNで算出された bin size 400/800/1600 のpurityとploidyの一覧を出力する。
 ```
-$ monitoring CNV --flowcellid <flowcellid>
+$ monitoring pureCN --flowcellid <flowcellid>
 ```
 ⇒ /data1/work/monitoring/PureCN/[batchfolder].tsv が作成される。\
 ※ すでに出力ファイルが存在する場合は上書きする。
@@ -65,10 +66,11 @@ $ monitoring CNV --flowcellid <flowcellid>
 
 ### オプションの詳細
 ```
-$ monitoring CNV --help
+$ monitoring pureCN --help
 version: v1.0.0
-usage: monitoring.py CNV [-h] --flowcellid FLOWCELLID [--inclusion INCLUSION] [--exclusion EXCLUSION]
-                         [--directory DIRECTORY] [--outdir OUTDIR]
+usage: monitoring.py pureCN [-h] --flowcellid FLOWCELLID [--inclusion INCLUSION]
+                [--exclusion EXCLUSION] [--directory DIRECTORY] [--outdir OUTDIR]
+
 optional arguments:
   -h, --help            show this help message and exit
   --flowcellid FLOWCELLID, -fc FLOWCELLID
@@ -92,7 +94,47 @@ optional arguments:
 
 </details>
 
-## 3\. fusion（STAR-SEQR）
+
+## 3\. CNV
+指定した遺伝子セットのコピー数一覧を出力する。\
+※ スクリプトを実行した時点で解析が終了しているM3検体のコピー数を検索する。
+※ 解析フォルダに保存されている中間ファイルが削除されている場合はNAとなる。
+```
+$ monitoring CNV --genes [GENES]
+```
+⇒ /data1/work/monitoring/CNV/[timestamp].xlsx が作成される。
+<details>
+  <summary> 
+    More Details
+  </summary>
+
+### オプションの詳細
+```
+$ monitoring CNV --help
+version: v1.0.0
+usage: monitoring.py CNV [-h] --genes GENES [--exclusion EXCLUSION] [--directory DIRECTORY] [--outdir OUTDIR]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --genes GENES, -g GENES
+                        gene names (comma separated) (default: )
+  --exclusion EXCLUSION, -e EXCLUSION
+                        sample IDs to exclude (comma separated) (default: )
+  --directory DIRECTORY, -d DIRECTORY
+                        parent analytical directory (default: /data1/data/result)
+  --outdir OUTDIR, -o OUTDIR
+                        output directory path (default: /data1/work/monitoring/CNV)
+```
+| option        |required | 概要                     |default                    |
+|:--------------|:-------:|:-------------------------|:--------------------------|
+|--genes/-g     |True     |遺伝子名。カンマ区切りで複数指定可能               |None |
+|--exclusion/-e |False    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None |
+|--directory/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result         |
+|--outdir/-o    |False    |結果の出力先ディレクトリ     |/data1/work/monitoring/CNV |
+
+</details>
+
+## 4\. fusion（STAR-SEQR）
 STAR-RSEQの実行時間の目安となる sequenceの組合せ総数を算出する。\
 値が 10^6 未満なら数時間で終了する可能性が高い。
 ```
@@ -129,7 +171,7 @@ optional arguments:
 
 </details>
 
-## 4\. splice（Alternative Splicing）
+## 5\. splice（Alternative Splicing）
 BAMファイルからEGFR, MET,AR領域のdepthを計測し、exon領域とともに描画する。
 ```
 monitoring splice --sample <sample>
@@ -167,7 +209,7 @@ optional arguments:
 
 </details>
 
-## 5\. preFilter
+## 6\. preFilter
 Filter前の解析データをExcel出力する。
 ```
 $ monitoring preFilter --flowcellid <flowcellid>
@@ -211,7 +253,7 @@ optional arguments:
 
 </details>
 
-## 6\. benchmark
+## 7\. benchmark
 解析工程でBenchmarkフォルダに出力される各工程の所要時間(h:m:sの値)のテーブルをファイル出力する。
 ```
 $ monitoring benchmark --flowcellid <flowcellid>
