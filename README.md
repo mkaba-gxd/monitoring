@@ -22,14 +22,15 @@ helpページを表示してエイリアスの設定を確認する。以下が�
 ```
 $ monitoring --help
 version: v1.0.0
-usage: monitoring.py [-h] [--version] {QC,CNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM} ...
+usage: monitoring.py [-h] [--version] {QC,pureCN,CNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM} ...
 
 Tools for monitoring analysis data.
 
 positional arguments:
-  {QC,CNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM}
+  {QC,pureCN,CNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM}
     QC                  QC monitoring
-    CNV                 CNV(PureCN) monitoring
+    pureCN              PureCN window size monitoring
+    CNV                 Copy Numver monitoring
     fusion (FS)         Fusion(STAR-SEQR) monitoring
     splice (AS)         Alternative Splicing monitoring
     preFilter (PRE)     create pre-filtered data
