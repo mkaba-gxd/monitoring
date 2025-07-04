@@ -1,5 +1,6 @@
 import pandas as pd
 import datetime
+import warnings
 from .func import *
 
 def remove_dup_list(lst):
@@ -72,13 +73,16 @@ def run_cnv(args):
             filt = df[ df['Gene_name'].isin(genes) ].drop_duplicates().copy()
             miss = list(set(genes) - set(filt['Gene_name']))
 
-            if miss :
-                na_rows = pd.DataFrame({'Gene_name': missing})
-                for col in df.columns:
-                    na_rows[col] = pd.NA
-                df = pd.concat([filt, na_rows], ignore_index=True)
-            else :
-                df = filt
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", category=FutureWarning)
+
+                if miss :
+                    na_rows = pd.DataFrame({'Gene_name': miss})
+                    for col in df.columns[ df.columns != 'Gene_name' ]:
+                        na_rows[col] = pd.NA
+                    df = pd.concat([filt, na_rows], ignore_index=True)
+                else :
+                    df = filt
 
             df.insert(0, 'sample_id', item['SAMPLE_ID'])
 
@@ -90,8 +94,13 @@ def run_cnv(args):
         except Exception as e:
             continue
 
+    miss = []
     for g in genes :
         df_g = merge_data[ merge_data['Gene_name']==g ]
+        if df_g.dropna(subset=['gene.mean.CN']).shape[0] == 0 :
+            miss.append(g)
+            continue
+
         df_g = df_g.sort_values(['sample_id']).reset_index(drop=True)
         try :
             with pd.ExcelWriter(out_file, mode="a", engine="openpyxl", if_sheet_exists="replace") as writer :
@@ -100,4 +109,6 @@ def run_cnv(args):
             with pd.ExcelWriter(out_file, engine='openpyxl') as writer:
                 df_g.to_excel(writer, sheet_name=g, index=False)
 
+    if len(miss) > 0 :
+        print('[' + ','.join(miss) + '] does not exist in the reference.')
 
