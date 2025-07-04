@@ -100,7 +100,7 @@ optional arguments:
 ※ スクリプトを実行した時点で解析が終了しているすべてのM3検体(Patient IDがM3から始まるもの)のコピー数を検索する。\
 ※ 解析フォルダに保存されている中間ファイルが削除されている場合は除外される。
 ```
-monitoring CNV --genes [GENES]
+monitoring CNV --genes [GENES/gene list filepath]
 ```
 ⇒ /data1/work/monitoring/CNV/[timestamp].xlsx が作成される。
 <details>
@@ -117,7 +117,7 @@ usage: monitoring.py CNV [-h] --genes GENES [--exclusion EXCLUSION] [--directory
 optional arguments:
   -h, --help            show this help message and exit
   --genes GENES, -g GENES
-                        gene names (comma separated) (default: )
+                        gene names (comma separated) or file paths for a list of gene sets (default: )
   --exclusion EXCLUSION, -e EXCLUSION
                         sample IDs to exclude (comma separated) (default: )
   --directory DIRECTORY, -d DIRECTORY
@@ -125,9 +125,9 @@ optional arguments:
   --outdir OUTDIR, -o OUTDIR
                         output directory path (default: /data1/work/monitoring/CNV)
 ```
-| option        |required | 概要                     |default                    |
+| option        |required | 概要                     |default                     |
 |:--------------|:-------:|:-------------------------|:--------------------------|
-|--genes/-g     |True     |遺伝子名。カンマ区切りで複数指定可能               |None |
+|--genes/-g     |True     |遺伝子名(カンマ区切りで複数指定可能)または遺伝子名を記載したファイルパス |None |
 |--exclusion/-e |False    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None |
 |--directory/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result         |
 |--outdir/-o    |False    |結果の出力先ディレクトリ     |/data1/work/monitoring/CNV |
