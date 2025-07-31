@@ -8,8 +8,8 @@ CAP検査（eWES/WTS）で実施された解析について、モニタリング
 |[2](#pureCN)| pureCN         | PureCNで算出されたpurity, ploidyの一覧作成 |
 |[3](#CNV)| CNV            | 指定した遺伝子セットのコピー数一覧を作成 |
 |[4](#SNV)| SNV            | 指定した場所で観測された変異を抽出 |
-|[5](#fusion（STAR-SEQR）)| fusion, FS     | (STAR-SEQR) 所要時間の推定         |
-|[6](#splice（Alternative-Splicing）)| splice, AS     | EGFR, MET, AR 領域のdepthを描画    |
+|[5](#fusion)| fusion, FS     | (STAR-SEQR) 所要時間の推定         |
+|[6](#splice)| splice, AS     | EGFR, MET, AR 領域のdepthを描画    |
 |[7](#preFilter)| preFilter, PRE | フィルター前データ作成              |
 |[8](#benchmark)| benchmark, BM  | 工程所要時間の一覧作成              |
 
@@ -57,6 +57,7 @@ monitoring QC
 ```
 ⇒ /data1/work/monitoring/QC/[timestamp].xlsx が作成される
 
+<a id="pureCN"></a>
 ## 2\. pureCN
 PC,NCを除いた各サンプルについて、解析で採用されたbin sizeと、PureCNで算出された bin size 400/800/1600 のpurityとploidyの一覧を出力する。
 ```
@@ -99,6 +100,7 @@ optional arguments:
 
 </details>
 
+<a id="CNV"></a>
 ## 3\. CNV
 指定した遺伝子セットのコピー数一覧を出力する。\
 ※ スクリプトを実行した時点で解析が終了しているすべてのM3検体(Patient IDがM3から始まるもの)のコピー数を検索する。\
@@ -138,6 +140,7 @@ optional arguments:
 
 </details>
 
+<a id="SNV"></a>
 ## 4. SNV
 ```
 monitoring SNV --sample <sample> --position <chr:pos> (--window <int>)
@@ -176,6 +179,7 @@ optional arguments:
 
 </details>
 
+<a id="fusion"></a>
 ## 5\. fusion（STAR-SEQR）
 STAR-RSEQの実行時間の目安となる sequenceの組合せ総数を算出する。\
 値が 10^6 未満なら数時間で終了する可能性が高い。
@@ -213,6 +217,7 @@ optional arguments:
 
 </details>
 
+<a id="splice"></a>
 ## 6\. splice（Alternative Splicing）
 BAMファイルからEGFR, MET,AR領域のdepthを計測し、exon領域とともに描画する。
 ```
@@ -251,6 +256,7 @@ optional arguments:
 
 </details>
 
+<a id="preFilter"></a>
 ## 7\. preFilter
 Filter前の解析データをExcel出力する。
 ```
@@ -295,6 +301,7 @@ optional arguments:
 
 </details>
 
+<a id="benchmark"></a>
 ## 8\. benchmark
 解析工程でBenchmarkフォルダに出力される各工程の所要時間(h:m:sの値)のテーブルをファイル出力する。
 ```
