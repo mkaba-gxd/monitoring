@@ -77,7 +77,7 @@ def run_benchmark(args):
 
     for pj_type in df_info['PRJ_TYPE'].unique():
 
-        df_prj = df_info[df_info['PRJ_TYPE']==pj_type].reset_index()
+        df_prj = df_info[df_info['PRJ_TYPE']==pj_type].reset_index(drop=True)
         bcm_prj = bcm_tbl[ bcm_tbl['type']==pj_type ][['class','name']]
 
         anal_dir = os.path.join(directory,pj_type,df_prj['seqDir'][0])
