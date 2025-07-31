@@ -47,7 +47,8 @@ optional arguments:
 ```
 monitoring <command> --help
 ```
-## 1\. QC値 <a id="QC"></a>
+<a id="QC"></a>
+## 1\. QC値 
 スクリプトを実行した時点でデータベースに登録されている全検体のQC情報の一覧を作成する。\
 QC項目はOncoStationで確認できる項目と同じ。
 ```
