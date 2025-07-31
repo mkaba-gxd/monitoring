@@ -4,14 +4,14 @@ CAP検査（eWES/WTS）で実施された解析について、モニタリング
 **また、データベースの設計内容が不明なため、データベース検索時に想定外の動作を行う可能性があります。**
 |idx | command        | 概要                              |
 |:--:|:---------------|:----------------------------------|
-|1| QC             | WET,DRY工程のQC値一覧作成          |
-|2| pureCN         | PureCNで算出されたpurity, ploidyの一覧作成 |
-|3| CNV            | 指定した遺伝子セットのコピー数一覧を作成 |
-|4| SNV            | 指定した場所で観測された変異を抽出 |
-|5| fusion, FS     | (STAR-SEQR) 所要時間の推定         |
-|6| splice, AS     | EGFR, MET, AR 領域のdepthを描画    |
-|7| preFilter, PRE | フィルター前データ作成              |
-|8| benchmark, BM  | 工程所要時間の一覧作成              |
+|[1](#QC値)| QC             | WET,DRY工程のQC値一覧作成          |
+|[2](#pureCN)| pureCN         | PureCNで算出されたpurity, ploidyの一覧作成 |
+|[3](#CNV)| CNV            | 指定した遺伝子セットのコピー数一覧を作成 |
+|[4](#SNV)| SNV            | 指定した場所で観測された変異を抽出 |
+|[5](#fusion（STAR-SEQR）)| fusion, FS     | (STAR-SEQR) 所要時間の推定         |
+|[6](#splice（Alternative-Splicing）)| splice, AS     | EGFR, MET, AR 領域のdepthを描画    |
+|[7](#preFilter)| preFilter, PRE | フィルター前データ作成              |
+|[8](#benchmark)| benchmark, BM  | 工程所要時間の一覧作成              |
 
 ## エイリアスの作成 ※初回のみ
 ~/bin フォルダ直下に以下のコマンドを記載したテキストファイル monitoring を作成し、実行権限を付与する。\
