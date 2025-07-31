@@ -2,16 +2,16 @@
 CAP検査（eWES/WTS）で実施された解析について、モニタリングを行う。\
 指定されたsample IDやflowcell IDから検体情報をデータベースに問合せ、解析ディレクトリ内のデータをロードするため、データベースに登録がない検体や、規程の場所に解析データやログファイルがない検体に対しては実行できません。\
 **また、データベースの設計内容が不明なため、データベース検索時に想定外の動作を行う可能性があります。**
-|idx | command        | 概要                              |
-|:--:|:---------------|:----------------------------------|
-|[1](#QC)| QC             | WET,DRY工程のQC値一覧作成          |
-|[2](#pureCN)| pureCN         | PureCNで算出されたpurity, ploidyの一覧作成 |
-|[3](#CNV)| CNV            | 指定した遺伝子セットのコピー数一覧を作成 |
-|[4](#SNV)| SNV            | 指定した場所で観測された変異を抽出 |
-|[5](#fusion)| fusion, FS     | (STAR-SEQR) 所要時間の推定         |
-|[6](#splice)| splice, AS     | EGFR, MET, AR 領域のdepthを描画    |
-|[7](#preFilter)| preFilter, PRE | フィルター前データ作成              |
-|[8](#benchmark)| benchmark, BM  | 工程所要時間の一覧作成              |
+| command           | 概要                              |
+|:------------------|:----------------------------------|
+| [QC](#QC)         | WET,DRY工程のQC値一覧作成          |
+| [pureCN](#pureCN) | PureCNで算出されたpurity, ploidyの一覧作成 |
+| [CNV](#CNV)       | 指定した遺伝子セットのコピー数一覧を作成 |
+| [SNV](#SNV)       | 指定した場所で観測された変異を抽出 |
+| [fusion, FS](#fusion)        | (STAR-SEQR) 所要時間の推定         |
+| [splice, AS](#splice)        | EGFR, MET, AR 領域のdepthを描画    |
+| [preFilter, PRE](#preFilter) | フィルター前データ作成              |
+| [benchmark, BM](#benchmark)  | 工程所要時間の一覧作成              |
 
 ## エイリアスの作成 ※初回のみ
 ~/bin フォルダ直下に以下のコマンドを記載したテキストファイル monitoring を作成し、実行権限を付与する。\
