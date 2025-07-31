@@ -2,7 +2,7 @@ import sys
 import argparse
 from modules import *
 
-VERSION="v1.0.0"
+VERSION="v1.1.0"
 
 def main():
 
@@ -34,6 +34,14 @@ def main():
     parser_cnv.add_argument("--directory","-d", required=False, help="parent analytical directory", default="/data1/data/result")
     parser_cnv.add_argument("--outdir","-o", required=False, help="output directory path", default="/data1/work/monitoring/CNV")
     parser_cnv.set_defaults(func=run_cnv)
+
+    # monitoring SNV
+    parser_snv = subparsers.add_parser("SNV", help="Extract SNV intermediate data.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser_snv.add_argument("--sample", "-s", required=True, help="sample id")
+    parser_snv.add_argument("--position", "-p", required=True, help="site of mutation.")
+    parser_snv.add_argument("--window", "-w", required=False, type=int, help="locus width.", default=0)
+    parser_snv.add_argument("--directory","-d", required=False, help="parent analytical directory", default="/data1/data/result")
+    parser_snv.set_defaults(func=run_snv)
 
     # monitoring Fusion (STAR-SEQR)
     parser_seqr = subparsers.add_parser("fusion", aliases=['FS'], help="Fusion(STAR-SEQR) monitoring", formatter_class=argparse.ArgumentDefaultsHelpFormatter)

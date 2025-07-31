@@ -7,10 +7,11 @@ CAP検査（eWES/WTS）で実施された解析について、モニタリング
 |1| QC             | WET,DRY工程のQC値一覧作成          |
 |2| pureCN         | PureCNで算出されたpurity, ploidyの一覧作成 |
 |3| CNV            | 指定した遺伝子セットのコピー数一覧を作成 |
-|4| fusion, FS     | (STAR-SEQR) 所要時間の推定         |
-|5| splice, AS     | EGFR, MET, AR 領域のdepthを描画    |
-|6| preFilter, PRE | フィルター前データ作成              |
-|7| benchmark, BM  | 工程所要時間の一覧作成              |
+|4| SNV            | 指定した場所で観測された変異を抽出 |
+|5| fusion, FS     | (STAR-SEQR) 所要時間の推定         |
+|6| splice, AS     | EGFR, MET, AR 領域のdepthを描画    |
+|7| preFilter, PRE | フィルター前データ作成              |
+|8| benchmark, BM  | 工程所要時間の一覧作成              |
 
 ## エイリアスの作成 ※初回のみ
 ~/bin フォルダ直下に以下のコマンドを記載したテキストファイル monitoring を作成し、実行権限を付与する。\
@@ -22,16 +23,17 @@ singularity exec --disable-cache --bind /data1 /data1/labTools/labTools.sif pyth
 helpページを表示してエイリアスの設定を確認する。以下が表示されればOK。
 ```
 $ monitoring --help
-version: v1.0.0
-usage: monitoring.py [-h] [--version] {QC,pureCN,CNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM} ...
+version: v1.1.0
+usage: monitoring.py [-h] [--version] {QC,pureCN,CNV,SNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM} ...
 
 Tools for monitoring analysis data.
 
 positional arguments:
-  {QC,pureCN,CNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM}
+  {QC,pureCN,CNV,SNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM}
     QC                  QC monitoring
     pureCN              PureCN window size monitoring
     CNV                 Copy Numver monitoring
+    SNV                 Extract SNV intermediate data.
     fusion (FS)         Fusion(STAR-SEQR) monitoring
     splice (AS)         Alternative Splicing monitoring
     preFilter (PRE)     create pre-filtered data
@@ -69,7 +71,7 @@ monitoring pureCN --flowcellid <flowcellid>
 ### オプションの詳細
 ```
 $ monitoring pureCN --help
-version: v1.0.0
+version: v1.1.0
 usage: monitoring.py pureCN [-h] --flowcellid FLOWCELLID [--inclusion INCLUSION]
                 [--exclusion EXCLUSION] [--directory DIRECTORY] [--outdir OUTDIR]
 
@@ -112,7 +114,7 @@ monitoring CNV --genes [GENES/gene list filepath]
 ### オプションの詳細
 ```
 $ monitoring CNV --help
-version: v1.0.0
+version: v1.1.0
 usage: monitoring.py CNV [-h] --genes GENES [--exclusion EXCLUSION] [--directory DIRECTORY] [--outdir OUTDIR]
 
 optional arguments:
@@ -135,7 +137,45 @@ optional arguments:
 
 </details>
 
-## 4\. fusion（STAR-SEQR）
+## 4. SNV
+```
+monitoring SNV --sample <sample> --position <chr:pos> (--window <int>)
+```
+⇒ 指定した場所について、mutect2,lofreq,freebayesで検出された変異を表示する。
+
+<details>
+  <summary>
+    More Details
+  </summary>
+
+### オプションの詳細
+```
+$ monitoring SNV --help
+version: v1.1.0
+usage: monitoring.py SNV [-h] --sample SAMPLE --position POSITION [--window WINDOW] [--directory DIRECTORY]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --sample SAMPLE, -s SAMPLE
+                        sample id (default: None)
+  --position POSITION, -p POSITION
+                        site of mutation. (default: None)
+  --window WINDOW, -w WINDOW
+                        locus width. (default: 0)
+  --directory DIRECTORY, -d DIRECTORY
+                        parent analytical directory (default: /data1/data/result)
+
+```
+| option        |required | 概要                     |default               |
+|:--------------|:-------:|:-------------------------|:---------------------|
+|--sample/-s    |True     |Sample ID。複数指定不可   |None                  |
+|--position/-v  |True     |検索するゲノム上の場所(chr:position) |None       |
+|--window/-w    |False    |検索する範囲(positionの前後<window>bpを検索) |0  |
+|--directory/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result |
+
+</details>
+
+## 5\. fusion（STAR-SEQR）
 STAR-RSEQの実行時間の目安となる sequenceの組合せ総数を算出する。\
 値が 10^6 未満なら数時間で終了する可能性が高い。
 ```
@@ -153,7 +193,7 @@ monitoring FS -s <sample>
 ### オプションの詳細
 ```
 $ monitoring fusion --help
-version: v1.0.0
+version: v1.1.0
 usage: monitoring.py fusion [-h] --sample SAMPLE [--verbose] [--analysis_dir ANALYSIS_DIR]
 
 optional arguments:
@@ -172,7 +212,7 @@ optional arguments:
 
 </details>
 
-## 5\. splice（Alternative Splicing）
+## 6\. splice（Alternative Splicing）
 BAMファイルからEGFR, MET,AR領域のdepthを計測し、exon領域とともに描画する。
 ```
 monitoring splice --sample <sample>
@@ -187,7 +227,7 @@ monitoring AS -s <sample>
 ### オプションの詳細
 ```
 $ monitoring splice --help
-version: v1.0.0
+version: v1.1.0
 usage: monitoring.py splice [-h] --sample SAMPLE [--category CATEGORY]
                             [--analysis_dir ANALYSIS_DIR] [--outdir OUTDIR]
 optional arguments:
@@ -210,7 +250,7 @@ optional arguments:
 
 </details>
 
-## 6\. preFilter
+## 7\. preFilter
 Filter前の解析データをExcel出力する。
 ```
 monitoring preFilter --flowcellid <flowcellid>
@@ -225,7 +265,7 @@ monitoring PRE -fc <flowcellid>
 ### オプションの詳細
 ```
 $ monitoring preFilter --help
-version: v1.0.0
+version: v1.1.0
 usage: monitoring.py preFilter [-h] --flowcellid FLOWCELLID [--directory DIRECTORY] [--project_type {both,WTS,eWES}]
                                [--outdir OUTDIR] [--inclusion INCLUSION] [--exclusion EXCLUSION]
 optional arguments:
@@ -254,7 +294,7 @@ optional arguments:
 
 </details>
 
-## 7\. benchmark
+## 8\. benchmark
 解析工程でBenchmarkフォルダに出力される各工程の所要時間(h:m:sの値)のテーブルをファイル出力する。
 ```
 monitoring benchmark --flowcellid <flowcellid>
@@ -270,7 +310,7 @@ monitoring BM -fc <flowcellid>
 ### オプションの詳細
 ```
 $ monitoring benchmark --help
-version: v1.0.0
+version: v1.1.0
 usage: monitoring.py benchmark [-h] --flowcellid FLOWCELLID [--project_type {both,WTS,eWES}] [--directory DIRECTORY]
                                [--outdir OUTDIR] [--inclusion INCLUSION] [--exclusion EXCLUSION]
 optional arguments:

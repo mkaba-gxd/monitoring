@@ -68,13 +68,13 @@ def Search_fcDir(batchID, novaseqDir : Path):
 
     return os.path.basename(fcDirs[-1])
 
-def batch(sample, anal_dir):
+def batch(sample, anal_dir, anal_type):
 
     tbl = getinfo(subname_query(sample))
+    tbl['PRJ_TYPE'] = tbl['PRJ_TYPE'].str.replace('EWES',"eWES")
     if tbl.shape[0] == 0 : init("Unregistered sample ID.")
+    if anal_type != tbl.PRJ_TYPE[0] : init("Analysis type is not " + anal_type)
     subname = tbl.sub_name[0]
-    anal_type = tbl.PRJ_TYPE[0]
-    if anal_type != 'WTS' : init("Analysis type is not WTS")
     anal_dir = Path(os.path.join(anal_dir, anal_type))
     fcDirs = [fcDir for fcDir in anal_dir.iterdir() if fcDir.name.endswith(subname)]
     fcDirs.sort()

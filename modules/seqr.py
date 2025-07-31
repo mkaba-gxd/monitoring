@@ -22,7 +22,7 @@ def run_seqr(args):
     verbose = args.verbose
     anal_dir = args.analysis_dir
 
-    subDir = batch(sample, anal_dir)
+    subDir = batch(sample, anal_dir, 'WTS')
     if subDir is None : init("No registration in database")
 
     chim_dir = os.path.join(anal_dir, 'WTS', subDir, sample, 'Fusion', 'STAR-SEQR', f"{sample}_STAR-SEQR", 'chim_transcripts')
