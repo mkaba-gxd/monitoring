@@ -20,7 +20,7 @@ def run_seqr(args):
 
     sample = args.sample
     verbose = args.verbose
-    anal_dir = args.analysis_dir
+    anal_dir = args.directory
 
     subDir = batch(sample, anal_dir, 'WTS')
     if subDir is None : init("No registration in database")

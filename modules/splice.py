@@ -32,7 +32,7 @@ def run_splice(args) :
     sample = args.sample
     category = args.category
     outdir = args.outdir
-    anal_dir = args.analysis_dir
+    anal_dir = args.directory
 
     subDir = batch(sample, anal_dir)
     if subDir is None : init("No registration in database")

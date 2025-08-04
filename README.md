@@ -172,8 +172,8 @@ optional arguments:
 | option        |required | 概要                     |default               |
 |:--------------|:-------:|:-------------------------|:---------------------|
 |--sample/-s    |True     |Sample ID。複数指定不可   |None                  |
-|--position/-v  |True     |検索するゲノム上の場所(chr:position) |None       |
-|--window/-w    |False    |検索する範囲(positionの前後<window>bpを検索) |0  |
+|--position/-p  |True     |検索するゲノム上の場所(chr:position) |None       |
+|--window/-w    |False    |検索する範囲(positionの前後\<window\>bpを検索) |0  |
 |--directory/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result |
 
 </details>
@@ -198,21 +198,21 @@ monitoring FS -s <sample>
 ```
 $ monitoring fusion --help
 version: v1.1.0
-usage: monitoring.py fusion [-h] --sample SAMPLE [--verbose] [--analysis_dir ANALYSIS_DIR]
+usage: monitoring.py fusion [-h] --sample SAMPLE [--verbose] [--directory DIRECTORY]
 
 optional arguments:
   -h, --help            show this help message and exit
   --sample SAMPLE, -s SAMPLE
                         sample id (default: None)
   --verbose, -v         Show details (default: False)
-  --analysis_dir ANALYSIS_DIR, -d ANALYSIS_DIR
+  --directory DIRECTORY, -d DIRECTORY
                         parent analytical directory (default: /data1/data/result)
 ```
-| option           |required | 概要                     |default             |
-|:-----------------|:-------:|:-------------------------|:-------------------|
-|--sample/-s       |True     |Sample ID。複数指定不可    |None                |
-|--verbose/-v      |False    |詳細を表示するかどうか      |False               |
-|--analysis_dir/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result |
+| option        |required | 概要                       |default             |
+|:--------------|:-------:|:---------------------------|:-------------------|
+|--sample/-s    |True     |Sample ID。複数指定不可     |None                |
+|--verbose/-v   |False    |詳細を表示するかどうか      |False               |
+|--directory/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result |
 
 </details>
 
@@ -233,25 +233,25 @@ monitoring AS -s <sample>
 ```
 $ monitoring splice --help
 version: v1.1.0
-usage: monitoring.py splice [-h] --sample SAMPLE [--category CATEGORY]
-                            [--analysis_dir ANALYSIS_DIR] [--outdir OUTDIR]
+usage: monitoring.py splice [-h] --sample SAMPLE [--category CATEGORY] [--directory DIRECTORY] [--outdir OUTDIR]
+
 optional arguments:
   -h, --help            show this help message and exit
   --sample SAMPLE, -s SAMPLE
                         sample id (default: None)
   --category CATEGORY, -c CATEGORY
                         Comma-separated list of genes to include. Valid options: EGFR, MET, AR (default: ['AR'])
-  --analysis_dir ANALYSIS_DIR, -d ANALYSIS_DIR
+  --directory DIRECTORY, -d DIRECTORY
                         parent analytical directory (default: /data1/data/result)
   --outdir OUTDIR, -o OUTDIR
                         output directory path (default: /data1/work/monitoring/splice)
 ```
-| option           |required | 概要                     |default                   |
-|:-----------------|:-------:|:-------------------------|:-------------------------|
-|--sample/-s       |True     |Sample ID, 複数指定不可    |None                      |
-|--category/c      |False    |描画する遺伝子領域。EGFR, MET, ARから選択 | AR          |
-|--analysis_dir/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result        |
-|--outdir/-o       |False    |結果の出力先ディレクトリ |/data1/work/monitoring/splice |
+| option        |required | 概要                     |default               |
+|:--------------|:-------:|:-------------------------|:---------------------|
+|--sample/-s    |True     |Sample ID, 複数指定不可   |None                  |
+|--category/-c  |False    |描画する遺伝子領域。EGFR, MET, ARから選択 | AR   |
+|--directory/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result |
+|--outdir/-o    |False    |結果の出力先ディレクトリ |/data1/work/monitoring/splice |
 
 </details>
 
