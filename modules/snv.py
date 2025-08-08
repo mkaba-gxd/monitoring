@@ -10,27 +10,55 @@ from cyvcf2 import VCF
 from .func import *
 
 use_chrom = ['chr' + str(i) for i in range(1, 23)] + ['chrX', 'chrY']
-use_columns = ["CHROM", "POS", "REF", "ALT"]
+use_columns = ["CHROM", "POS", "REF", "ALT","FORMAT","INFO"]
+out_columns = ["CHROM", "POS", "REF", "ALT","AF","DP"]
 
-def load_vcf(vcf_path):
+def load_vcf(vcf_path, d_type):
 
     with open(vcf_path) as f:
         skip_rows = sum(1 for line in f if line.startswith('#'))
 
-    data = pd.read_csv(vcf_path, sep='\t', skiprows=skip_rows, header=None, index_col=False, names=['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT','ATTR'])
+    if d_type :
+        data = pd.read_csv(vcf_path, sep='\t', skiprows=skip_rows, header=None, index_col=False, names=['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER','ATTR', 'FORMAT','INFO'])
+    else :
+        data = pd.read_csv(vcf_path, sep='\t', skiprows=skip_rows, header=None, index_col=False, names=['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO'])
+        data['FORMAT'] = None
+
     data = data[use_columns].copy()
+
     return data
 
-def search_vcf(vcf_path, chrom, position, window=0):
+def search_vcf(vcf_path, d_type, chrom, position, window=0):
 
-    data = load_vcf(vcf_path)
+    data = load_vcf(vcf_path, d_type)
     data = data[ data['CHROM']==chrom ]
     if window == 0:
         data = data[data['POS']==int(position)].reset_index(drop=True)
     else :
         data = data[(int(position)-window<=data['POS']) & (data['POS']<=int(position)+window)].reset_index(drop=True)
 
-    return data
+    if data.shape[0] == 0 :
+        return data
+
+    return add_column(data)
+    
+def add_column(data) :
+
+    data['AF'] = None
+    data['DP'] = None
+
+    for i, item in data.iterrows() :
+        if item['FORMAT'] is None :
+            info_dict = dict(x.split("=", 1) for x in item['INFO'].split(";") if "=" in x)
+        else :
+            info_keys = item['FORMAT'].split(":")
+            info_value = item['INFO'].split(":")
+            info_dict = {key: val for key, val in zip(info_keys, info_value)}
+
+        data.loc[i, 'AF'] = info_dict.get("AF")
+        data.loc[i, 'DP'] = info_dict.get("DP")
+
+    return data[out_columns]
 
 def run_snv(args):
 
@@ -54,7 +82,7 @@ def run_snv(args):
     if not os.path.isfile(file) :
         print("mutect2: Intermediate file does not exist.")
     else :
-        data = search_vcf(file, locus[0], locus[1], window)
+        data = search_vcf(file, True, locus[0], locus[1], window)
         if data.shape[0] == 0 :
             print('mutect2: No matching data found.')
         else :
@@ -66,7 +94,7 @@ def run_snv(args):
     if not os.path.isfile(file) :
         print("lofreq: Intermediate file does not exist.")
     else :
-        data = search_vcf(file, locus[0], locus[1], window)
+        data = search_vcf(file, False, locus[0], locus[1], window)
         if data.shape[0] == 0 :
             print('lofreq: No matching data found.')
         else :
@@ -78,7 +106,7 @@ def run_snv(args):
     if not os.path.isfile(file) :
         print("freebayes: Intermediate file does not exist.")
     else :
-        data = search_vcf(file, locus[0], locus[1], window)
+        data = search_vcf(file, True, locus[0], locus[1], window)
         if data.shape[0] == 0 :
             print('freebayes: No matching data found.')
         else :
