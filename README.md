@@ -144,8 +144,7 @@ optional arguments:
 ```
 monitoring SNV --sample <sample> --position <chr:pos> (--window <int>)
 ```
-⇒ 指定した場所について、mutect2,lofreq,freebayesで検出された変異を表示する。
-
+⇒ 指定した場所について、mutect2,lofreq,freebayesで検出された変異情報（CHROM,POS,REF,ALT,AF,DP）を表示する。※ freebayesはAFを算出しないため、Noneが表示される。
 <details>
   <summary>
     More Details
