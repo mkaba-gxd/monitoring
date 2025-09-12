@@ -79,6 +79,8 @@ def run_benchmark(args):
 
         df_prj = df_info[df_info['PRJ_TYPE']==pj_type].reset_index(drop=True)
         bcm_prj = bcm_tbl[ bcm_tbl['type']==pj_type ][['class','name']]
+        vms_prj = bcm_tbl[ bcm_tbl['type']==pj_type ][['class','name']]
+        rss_prj = bcm_tbl[ bcm_tbl['type']==pj_type ][['class','name']]
 
         anal_dir = os.path.join(directory,pj_type,df_prj['seqDir'][0])
         out_file = os.path.join(outdir, df_prj['seqDir'][0] + '.xlsx')
@@ -86,6 +88,8 @@ def run_benchmark(args):
 
         for i, item in df_prj.iterrows() :
             time_values = []
+            vms_values = []
+            rss_values = []
 
             for j, fac in bcm_prj.iterrows() :
 
@@ -104,20 +108,39 @@ def run_benchmark(args):
                     else :
                         parsed_time = 'unclear'
 
+                    if 'max_vms' in df.columns:
+                        max_vms = df['max_vms'].iloc[0]
+                    else :
+                        max_vms = 'unclear'
+                    if 'max_rss' in df.columns:
+                        max_rss = df['max_rss'].iloc[0]
+                    else :
+                        max_rss = 'unclear'
+
                 except Exception as e:
                     parsed_time = '-'
+                    max_vms = '-'
+                    max_rss = '-'
 
                 time_values.append(parsed_time)
+                vms_values.append(max_vms)
+                rss_values.append(max_rss)
 
             bcm_prj.insert(bcm_prj.shape[1], item['SAMPLE_ID'], time_values)
+            vms_prj.insert(vms_prj.shape[1], item['SAMPLE_ID'], vms_values)
+            rss_prj.insert(rss_prj.shape[1], item['SAMPLE_ID'], rss_values)
 
         try:
             with pd.ExcelWriter(out_file, mode="a", engine="openpyxl", if_sheet_exists="replace") as writer :
                 bcm_prj.to_excel(writer, sheet_name=pj_type, index=False)
+                vms_prj.to_excel(writer, sheet_name=pj_type + '_maxVms', index=False)
+                rss_prj.to_excel(writer, sheet_name=pj_type + '_maxRss', index=False)
 
         except FileNotFoundError:
             with pd.ExcelWriter(out_file, engine='openpyxl') as writer:
                 bcm_prj.to_excel(writer, sheet_name=pj_type, index=False)
+                vms_prj.to_excel(writer, sheet_name=pj_type + '_maxVms', index=False)
+                rss_prj.to_excel(writer, sheet_name=pj_type + '_maxRss', index=False)
 
         dataType_changes(out_file, pj_type, df_prj['SAMPLE_ID'], 'hh:mm:ss')
 
