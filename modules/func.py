@@ -3,6 +3,7 @@ import sys
 import pymysql
 import warnings
 import pandas as pd
+from itertools import product
 from pathlib import Path
 
 def getinfo(comm):
@@ -30,6 +31,29 @@ def SelectData(fc_id):
     ON gqs.SAMPLE_ID = ghl.SAMPLE_ID
     AND ghl.idx = (SELECT MAX(idx) FROM gc_history_log WHERE SAMPLE_ID = gqs.SAMPLE_ID)
     WHERE tesh.fc_id = '{fc_id}'
+    """
+    return query
+
+def SelectInfo(fc_id):
+    query = f"""
+    SELECT concat(tesh.equip_side, tesh.fc_id) AS sub_name, ghl.SAMPLE_ID, tol.timepoint, gp.PATIENT_NO, gp.PRJ_TYPE, gp.DIAGNOSIS_NAME, cctm.CLINICAL_TRIAL_NAME
+    FROM gxd.tb_expr_seq_header tesh
+    INNER JOIN gxd.gc_qc_sample gqs
+    ON tesh.run_id = gqs.run_id
+    INNER JOIN gxd.gc_project gp
+    ON gqs.SAMPLE_ID = gp.SAMPLE_ID
+    INNER JOIN gxd.tb_order_line tol
+    ON tol.sample_ID = gp.SAMPLE_ID
+    INNER JOIN gxd.gc_history_log ghl
+    ON gqs.SAMPLE_ID = ghl.SAMPLE_ID
+    AND ghl.idx = (SELECT MAX(idx) FROM gc_history_log WHERE SAMPLE_ID = gqs.SAMPLE_ID)
+    LEFT OUTER JOIN gxd.tb_order_header toh
+    ON tol.order_header_id = toh.order_header_id
+    LEFT OUTER JOIN cm_pi_company_clinical_trial_map cpcctm
+    ON toh.pi_comp =  cpcctm.PI_COMP_ID
+    LEFT OUTER JOIN gxd.cm_clinical_trial_mst cctm
+    ON cpcctm.CLINICAL_TRIAL_ID = cctm.CLINICAL_TRIAL_ID
+    WHERE tesh.fc_id = '{fc_id}' AND cctm.CLINICAL_TRIAL_NAME = 'MONSTAR-SCREEN-3' AND ghl.ANAL_STATUS = '102'
     """
     return query
 
@@ -84,6 +108,42 @@ def batch(sample, anal_dir, anal_type):
 def rmdup_list(lst):
     seen = set()
     return [x for x in lst if not (x in seen or seen.add(x))]
+
+def expand_breakpoints(df):
+
+    expanded_rows = []
+
+    for _, row in df.iterrows():
+
+        bp1_raw = str(row['breakpoint_1'])
+        bp2_raw = str(row['breakpoint_2'])
+
+        bp1_values = bp1_raw.split('|') if '|' in bp1_raw else [bp1_raw]
+        bp2_values = bp2_raw.split('|') if '|' in bp2_raw else [bp2_raw]
+
+        for bp1, bp2 in product(bp1_values, bp2_values):
+            new_row = row.copy()
+            new_row['breakpoint_1'] = bp1
+            new_row['breakpoint_2'] = bp2
+            expanded_rows.append(new_row)
+
+    return pd.DataFrame(expanded_rows)
+
+
+def pic_value(file, column):
+    try :
+        df = pd.read_csv(file, sep="\t")
+        if not column in df.columns :
+            return '-'
+        else :
+            return df[column][0]
+    except Exception as e:
+        return '-'
+
+def remove_files(FILES) :
+    for file in FILES:
+        if os.path.isfile(file):
+            os.remove(file)
 
 def init(msg="No matching data found.", parser=None):
     print(msg)

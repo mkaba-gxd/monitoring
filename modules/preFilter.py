@@ -2,7 +2,6 @@ import os
 import sys
 import pandas as pd
 import numpy as np
-from itertools import product
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import PatternFill
@@ -19,26 +18,6 @@ hidden_columns_ewes_3 = ['CN','C.flagged','seg.mean','seg.id','number.targets','
 use_columns_ewes_2 = ['Gene_name','CHROM','START','END','CN','C.flagged','seg.mean','seg.id','number.targets','gene.mean','gene.min','gene.max','focal','breakpoints','TYPE','num.snps','M','M.flagged','loh','ONCOKB_VARIANT_CNV','gene.mean.CN','FILTER_CN','FILTER_ONCOKB','FILTER_GENES']
 
 use_columns_wts_1 = ['Out-of-Frame','OncoKB','cancer-related','gene1','gene2','chr1','breakpoint_1','chr2','breakpoint_2','max_split_cnt','max_span_cnt','sample_type','disease','tools','inferred_fusion_type','samples','cancer_db_hits','fusion_IDs']
-
-def expand_breakpoints(df):
-
-    expanded_rows = []
-
-    for _, row in df.iterrows():
-
-        bp1_raw = str(row['breakpoint_1'])
-        bp2_raw = str(row['breakpoint_2'])
-
-        bp1_values = bp1_raw.split('|') if '|' in bp1_raw else [bp1_raw]
-        bp2_values = bp2_raw.split('|') if '|' in bp2_raw else [bp2_raw]
-
-        for bp1, bp2 in product(bp1_values, bp2_values):
-            new_row = row.copy()
-            new_row['breakpoint_1'] = bp1
-            new_row['breakpoint_2'] = bp2
-            expanded_rows.append(new_row)
-
-    return pd.DataFrame(expanded_rows)
 
 def cull_columns(file, sheet_name, hidden_columns, data) :
     wb = load_workbook(file)
@@ -135,21 +114,6 @@ def auto_filtering(file, sheet_name, column, val):
 
     wb.save(file)
 
-def pic_value(file, column):
-    try :
-        df = pd.read_csv(file, sep="\t")
-        if not column in df.columns :
-            return '-'
-        else :
-            return df[column][0]
-    except Exception as e:
-        return '-'
-
-def remove_files(FILES) :
-    for file in FILES:
-        if os.path.isfile(file):
-            os.remove(file)
-    
 def run_preFilter(args):
 
     flowcellid = args.flowcellid

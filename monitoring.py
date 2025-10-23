@@ -85,6 +85,16 @@ def main():
     parser_bcm.add_argument("--exclusion","-e", required=False, help="sample IDs to exclude (comma separated)", default="")
     parser_bcm.set_defaults(func=run_benchmark)
 
+    # Data aggregation
+    parser_agg = subparsers.add_parser("aggregate", aliases=['AGG'], help="List aggregation data (M3 only).", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser_agg.add_argument("--flowcellid","-fc", required=True, help="flowcell id")
+    parser_agg.add_argument("--project_type","-t", required=False, help="project type", default="both", choices=["both","WTS","eWES"])
+    parser_agg.add_argument("--directory","-d", required=False, help="parent analytical directory", default="/data1/data/result")
+    parser_agg.add_argument("--outdir","-o", required=False, help="output directory path", default="/data1/work/monitoring/aggregate")
+    parser_agg.add_argument("--inclusion","-i", required=False, help="sample IDs to include (comma separated)", default="")
+    parser_agg.add_argument("--exclusion","-e", required=False, help="sample IDs to exclude (comma separated)", default="")
+    parser_agg.set_defaults(func=run_aggregate)
+
     args = parser.parse_args()
     args.func(args)
 

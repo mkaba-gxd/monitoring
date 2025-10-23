@@ -12,6 +12,7 @@ CAP検査（eWES/WTS）で実施された解析について、モニタリング
 | [splice, AS](#splice)        | EGFR, MET, AR 領域のdepthを描画    |
 | [preFilter, PRE](#preFilter) | フィルター前データ作成              |
 | [benchmark, BM](#benchmark)  | 工程所要時間の一覧作成              |
+| [aggregate, AGG](#aggregate) | Box用集計データの作成              |
 
 ## エイリアスの作成 ※初回のみ
 ~/bin フォルダ直下に以下のコマンドを記載したテキストファイル monitoring を作成し、実行権限を付与する。\
@@ -29,7 +30,7 @@ usage: monitoring.py [-h] [--version] {QC,pureCN,CNV,SNV,fusion,FS,splice,AS,pre
 Tools for monitoring analysis data.
 
 positional arguments:
-  {QC,pureCN,CNV,SNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM}
+  {QC,pureCN,CNV,SNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM,aggregate,AGG}
     QC                  QC monitoring
     pureCN              PureCN window size monitoring
     CNV                 Copy Numver monitoring
@@ -38,6 +39,7 @@ positional arguments:
     splice (AS)         Alternative Splicing monitoring
     preFilter (PRE)     create pre-filtered data
     benchmark (BM)      List benchmark data.
+    aggregate (AGG)     List aggregation data (M3 only).
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -344,3 +346,54 @@ optional arguments:
 |--exclusion/-e    |False    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None        |
 
 </details>
+
+<a id="aggregate"></a>
+## 9\.aggregate
+バッチでまとめて変異一覧をBoxにアップロードしている変異一覧のExcelファイルに張り付けられる形で出力する
+```
+monitoring aggregate --flowcellid <flowcellid>
+monitoring AGG -fc <flowcellid>
+```
+⇒ /data1/work/monitoring/aggregate/[batchfolder].[item].tsv が作成される\
+※ すでに出力ファイルが存在する場合は上書きする。
+<details>
+  <summary>
+    More Details
+  </summary>
+
+### オプションの詳細
+```
+$ monitoring aggregate --help
+version: v1.1.0
+usage: monitoring.py aggregate [-h] --flowcellid FLOWCELLID [--project_type {both,WTS,eWES}] [--directory DIRECTORY]
+                               [--outdir OUTDIR] [--inclusion INCLUSION] [--exclusion EXCLUSION]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --flowcellid FLOWCELLID, -fc FLOWCELLID
+                        flowcell id (default: None)
+  --project_type {both,WTS,eWES}, -t {both,WTS,eWES}
+                        project type (default: both)
+  --directory DIRECTORY, -d DIRECTORY
+                        parent analytical directory (default: /data1/data/result)
+  --outdir OUTDIR, -o OUTDIR
+                        output directory path (default: /data1/work/monitoring/aggregate)
+  --inclusion INCLUSION, -i INCLUSION
+                        sample IDs to include (comma separated) (default: )
+  --exclusion EXCLUSION, -e EXCLUSION
+                        sample IDs to exclude (comma separated) (default: )
+
+```
+| option           |required | 概要                     |default                           |
+|:-----------------|:-------:|:-------------------------|:---------------------------------|
+|--flowcellid/-fc  |True     |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字 |None |
+|--project_type/-t |False    |解析種別。both,eWES,WTSから選択                   |both        |
+|--directory/-d    |False    |解析フォルダの親ディレクトリ |/data1/data/result               |
+|--outdir/-o       |False    |結果の出力先ディレクトリ     |/data1/work/monitoring/aggregate |
+|--inclusion/-i    |False    |出力するSample IDを限定。カンマ区切りで複数指定可能 |None      |
+|--exclusion/-e    |False    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None      |
+
+</details>
+
+
+
