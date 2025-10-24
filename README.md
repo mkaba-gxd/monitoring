@@ -349,7 +349,7 @@ optional arguments:
 
 <a id="aggregate"></a>
 ## 9\.aggregate
-batchでまとめた項目別の変異一覧を、Boxにアップロードしている変異一覧のExcelファイルに張り付けられる形で出力する
+項目別の変異一覧をBoxにアップロードしている変異一覧のExcelファイルに張り付けられる形で出力する
 ```
 monitoring aggregate --flowcellid <flowcellid>
 monitoring AGG -fc <flowcellid>
