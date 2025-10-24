@@ -354,8 +354,8 @@ optional arguments:
 monitoring aggregate --flowcellid <flowcellid>
 monitoring AGG -fc <flowcellid>
 ```
-⇒ /data1/work/monitoring/aggregate/[batchfolder].[item].tsv が作成される\
-※ すでに出力ファイルが存在する場合は上書きする。
+⇒ /data1/work/monitoring/aggregate/[batchfolder].xlsx が作成される\
+※ すでに出力ファイルが存在する場合は削除して新規作成する。
 <details>
   <summary>
     More Details
@@ -384,10 +384,10 @@ optional arguments:
                         sample IDs to exclude (comma separated) (default: )
 
 ```
-| option           |required | 概要                     |default                           |
-|:-----------------|:-------:|:-------------------------|:---------------------------------|
+| option           |required | 概要                     |default                               |
+|:-----------------|:-------:|:-------------------------|:-------------------------------------|
 |--flowcellid/-fc  |True     |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字 |None |
-|--project_type/-t |False    |解析種別。both,eWES,WTSから選択                   |both        |
+|--project_type/-t |False    |解析種別。both,eWES,WTSから選択                     |both      |
 |--directory/-d    |False    |解析フォルダの親ディレクトリ |/data1/data/result               |
 |--outdir/-o       |False    |結果の出力先ディレクトリ     |/data1/work/monitoring/aggregate |
 |--inclusion/-i    |False    |出力するSample IDを限定。カンマ区切りで複数指定可能 |None      |

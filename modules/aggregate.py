@@ -65,7 +65,10 @@ def run_aggregate(args) :
     if uniq_info.shape[0] == 0: init()
 
     df_info = pd.merge(df_info, uniq_info, on=['sub_name','PRJ_TYPE'])
+
     os.makedirs(outdir, exist_ok=True)
+    out_file = os.path.join(outdir, df_info['seqDir'][0] + '.xlsx')
+    remove_files([out_file])
 
     for pj_type in df_info['PRJ_TYPE'].unique():
 
@@ -73,10 +76,10 @@ def run_aggregate(args) :
         anal_dir = os.path.join(directory,pj_type,df_prj['seqDir'][0])
 
         if pj_type == 'eWES':
-            out_file_1 = os.path.join(outdir, df_prj['seqDir'][0] + '.SNV_INDEL.tsv')
-            out_file_2 = os.path.join(outdir, df_prj['seqDir'][0] + '.CSV.tsv')
-            out_file_3 = os.path.join(outdir, df_prj['seqDir'][0] + '.TMB_MSI.tsv')
-            remove_files([out_file_1,out_file_2])
+#            out_file_1 = os.path.join(outdir, df_prj['seqDir'][0] + '.SNV_INDEL.tsv')
+#            out_file_2 = os.path.join(outdir, df_prj['seqDir'][0] + '.CSV.tsv')
+#            out_file_3 = os.path.join(outdir, df_prj['seqDir'][0] + '.TMB_MSI.tsv')
+#            remove_files([out_file_1,out_file_2])
 
             df_SNV = pd.DataFrame(columns=["Sample", "Diagnosis"] + use_columns_ewes_1)
             df_CNV = pd.DataFrame(columns=["Sample", "Diagnosis"] + use_columns_ewes_2)
@@ -136,14 +139,25 @@ def run_aggregate(args) :
 
                 df_TMB_MSI.loc[len(df_TMB_MSI)] = [item['SAMPLE_ID'],item['DIAGNOSIS_NAME'],TMB_score,TMB_status,MSI_score,MSI_status ]
 
-            df_SNV.to_csv(out_file_1, sep="\t", index=False)
-            df_CNV.to_csv(out_file_2, sep="\t", index=False)
-            df_TMB_MSI.to_csv(out_file_3, sep="\t", index=False)
+#            df_SNV.to_csv(out_file_1, sep="\t", index=False)
+#            df_CNV.to_csv(out_file_2, sep="\t", index=False)
+#            df_TMB_MSI.to_csv(out_file_3, sep="\t", index=False)
+
+            try :
+                with pd.ExcelWriter(out_file, mode="a", engine="openpyxl", if_sheet_exists="replace") as writer :
+                    df_SNV.to_excel(writer, sheet_name='SNV_INDEL', index=False)
+                    df_CNV.to_excel(writer, sheet_name='CNV', index=False)
+                    df_TMB_MSI.to_excel(writer, sheet_name='TMB_MSI', index=False)
+            except FileNotFoundError:
+                with pd.ExcelWriter(out_file, engine='openpyxl') as writer:
+                    df_SNV.to_excel(writer, sheet_name='SNV_INDEL', index=False)
+                    df_CNV.to_excel(writer, sheet_name='CNV', index=False)
+                    df_TMB_MSI.to_excel(writer, sheet_name='TMB_MSI', index=False)
 
         elif pj_type == 'WTS':
-            out_file_1 = os.path.join(outdir, df_prj['seqDir'][0] + '.Fusion.tsv')
-            out_file_2 = os.path.join(outdir, df_prj['seqDir'][0] + '.Skipped.tsv')
-            remove_files([out_file_1,out_file_2])
+#            out_file_1 = os.path.join(outdir, df_prj['seqDir'][0] + '.Fusion.tsv')
+#            out_file_2 = os.path.join(outdir, df_prj['seqDir'][0] + '.Skipped.tsv')
+#            remove_files([out_file_1,out_file_2])
 
             df_fusion = pd.DataFrame(columns=["Sample", "Diagnosis"] + use_columns_wts_1)
             df_skipped = pd.DataFrame(columns=["Sample", "Diagnosis"] + use_columns_wts_2)
@@ -169,21 +183,27 @@ def run_aggregate(args) :
                 if not os.path.isfile(file_cis):
                     print('file not exists: ' + file_cis)
                     data = pd.DataFrame(columns=use_columns_wts_1)
+                    data.loc[0] = ['-'] * len(use_columns_wts_1)
+                    data['samples'] = item['SAMPLE_ID']
                 else :
                     data = pd.read_csv(file_cis, sep="\t", low_memory=False)
                     data = data.rename(columns={'#gene1':'gene1'})
-                    data['cancer_db_hits'] = data['cancer_db_hits'].astype(str)
-                    data = expand_breakpoints(data)
 
-                if data.shape[0] > 0:
-                    data = pd.merge(data, data_f, on=data.columns.tolist(), how='outer')[use_columns_wts_1]
-                    data['Out-of-Frame'] = data['Out-of-Frame'].fillna('FAIL')
-                    data = data.sort_values(['gene1','gene2','breakpoint_1','breakpoint_2'])
-                elif data_f.shape[0] > 0 :
-                    data = data_f.copy()
-                else :
-#                    data.loc[0] = ['-'] * len(use_columns_wts_1) 
-                    data['samples'] = item['SAMPLE_ID']
+                    if data.shape[0] > 0:
+                        data = expand_breakpoints(data)
+                        data['cancer_db_hits'] = data['cancer_db_hits'].astype(str)
+
+                        data = pd.merge(data, data_f, on=data.columns.tolist(), how='outer')[use_columns_wts_1]
+                        data['breakpoint_1'] = data['breakpoint_1'].astype(int)
+                        data['breakpoint_2'] = data['breakpoint_2'].astype(int)
+                        data['Out-of-Frame'] = data['Out-of-Frame'].fillna('FAIL')
+                        data = data.sort_values(['gene1','gene2','breakpoint_1','breakpoint_2'])
+                    elif data_f.shape[0] > 0 :
+                        data = data_f.copy()
+                    else :
+                        data = pd.DataFrame(columns=use_columns_wts_1)
+                        data.loc[0] = ['-'] * len(use_columns_wts_1) 
+                        data['samples'] = item['SAMPLE_ID']
 
                 data.insert(1, 'Diagnosis', item['DIAGNOSIS_NAME'])
 
@@ -214,8 +234,17 @@ def run_aggregate(args) :
             df_skipped['Report'] = df_skipped.apply(lambda row: "PASS" if (row['ratio'] >= 1) and (row['tpm_variant'] >= 0.01) else "FAIL", axis=1)
             df_skipped['Review'] = ''
 
-            df_fusion.to_csv(out_file_1, sep="\t", index=False)
-            df_skipped.to_csv(out_file_2, sep="\t", index=False)
+#            df_fusion.to_csv(out_file_1, sep="\t", index=False)
+#            df_skipped.to_csv(out_file_2, sep="\t", index=False)
+
+            try:
+                with pd.ExcelWriter(out_file, mode="a", engine="openpyxl", if_sheet_exists="replace") as writer :
+                    df_fusion.to_excel(writer, sheet_name="Fusion", index=False)
+                    df_skipped.to_excel(writer, sheet_name="Skipped", index=False)
+            except FileNotFoundError:
+                with pd.ExcelWriter(out_file, engine='openpyxl') as writer:
+                    df_fusion.to_excel(writer, sheet_name="Fusion", index=False)
+                    df_skipped.to_excel(writer, sheet_name="Skipped", index=False)
 
         else :
             print('PRJ_TYPE error:' + pj_type )
