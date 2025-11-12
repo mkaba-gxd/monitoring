@@ -7,7 +7,7 @@ from .func import *
 class sql_code():
     def extracting_qc_eWES():
         query = f'''
-        select DISTINCT l.sample_id, l.arrival_dt, COALESCE(l.ref_prep_id, l.prep_id) AS prep_id, l.customer_sample_id,
+        select DISTINCT l.sample_id, l.arrival_dt, COALESCE(l.ref_prep_id, l.prep_id) AS prep_id, l.customer_sample_id, l.biopsy_or_surgery,
         -- sample prep
         ROUND(COALESCE(p1.qubit_conc,p2.qubit_conc),2)   AS DNA_QUBIT_CONC,
         ROUND(COALESCE(p1.final_amt,p2.final_amt),2)     AS FINAL_AMT,
