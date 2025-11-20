@@ -10,7 +10,7 @@ CAP検査（eWES/WTS）で実施された解析について、モニタリング
 | [SNV](#SNV)       | 指定した場所で観測された変異を抽出 |
 | [fusion, FS](#fusion)        | (STAR-SEQR) 所要時間の推定         |
 | [splice, AS](#splice)        | EGFR, MET, AR 領域のdepthを描画    |
-| [preFilter, PRE](#preFilter) | フィルター前データ作成              |
+| [preFilter, PRE](#preFilter) | フィルター前データ作成（レビュー用） |
 | [benchmark, BM](#benchmark)  | 工程所要時間の一覧作成              |
 | [aggregate, AGG](#aggregate) | Box用集計データの作成              |
 
