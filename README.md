@@ -7,12 +7,13 @@ CAP検査（eWES/WTS）で実施された解析について、モニタリング
 | [QC](#QC)         | WET,DRY工程のQC値一覧作成          |
 | [pureCN](#pureCN) | PureCNで算出されたpurity, ploidyの一覧作成 |
 | [CNV](#CNV)       | 指定した遺伝子セットのコピー数一覧を作成 |
-| [SNV](#SNV)       | 指定した場所で観測された変異を抽出 |
-| [fusion, FS](#fusion)        | (STAR-SEQR) 所要時間の推定         |
-| [splice, AS](#splice)        | EGFR, MET, AR 領域のdepthを描画    |
-| [preFilter, PRE](#preFilter) | フィルター前データ作成（レビュー用） |
-| [benchmark, BM](#benchmark)  | 工程所要時間の一覧作成              |
-| [aggregate, AGG](#aggregate) | Box用集計データの作成              |
+| [SNV](#SNV)       | 指定した場所で観測された変異を抽出      |
+| [fusion, FS](#fusion)        | (STAR-SEQR) 所要時間の推定            |
+| [splice, AS](#splice)        | EGFR, MET, AR 領域のdepthを描画       |
+| [preFilter, PRE](#preFilter) | フィルター前データ作成（レビュー用）    |
+| [benchmark, BM](#benchmark)  | 工程所要時間の一覧作成                 |
+| [intermediate, ITM](#intermediate) | SNV&InDel 検出ツール毎の結果一覧 |
+| [aggregate, AGG](#aggregate) | Box用集計データの作成                 |
 
 ## エイリアスの作成 ※初回のみ
 ~/bin フォルダ直下に以下のコマンドを記載したテキストファイル monitoring を作成し、実行権限を付与する。\
@@ -24,7 +25,7 @@ singularity exec --disable-cache --bind /data1 /data1/labTools/labTools.sif pyth
 helpページを表示してエイリアスの設定を確認する。以下が表示されればOK。
 ```
 $ monitoring --help
-version: v1.1.0
+version: v1.2.0
 usage: monitoring.py [-h] [--version] {QC,pureCN,CNV,SNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM} ...
 
 Tools for monitoring analysis data.
@@ -74,7 +75,7 @@ monitoring pureCN --flowcellid <flowcellid>
 ### オプションの詳細
 ```
 $ monitoring pureCN --help
-version: v1.1.0
+version: v1.2.0
 usage: monitoring.py pureCN [-h] --flowcellid FLOWCELLID [--inclusion INCLUSION]
                 [--exclusion EXCLUSION] [--directory DIRECTORY] [--outdir OUTDIR]
 
@@ -118,7 +119,7 @@ monitoring CNV --genes [GENES/gene list filepath]
 ### オプションの詳細
 ```
 $ monitoring CNV --help
-version: v1.1.0
+version: v1.2.0
 usage: monitoring.py CNV [-h] --genes GENES [--exclusion EXCLUSION] [--directory DIRECTORY] [--outdir OUTDIR]
 
 optional arguments:
@@ -155,7 +156,7 @@ monitoring SNV --sample <sample> --position <chr:pos> (--window <int>)
 ### オプションの詳細
 ```
 $ monitoring SNV --help
-version: v1.1.0
+version: v1.2.0
 usage: monitoring.py SNV [-h] --sample SAMPLE --position POSITION [--window WINDOW] [--directory DIRECTORY]
 
 optional arguments:
@@ -198,7 +199,7 @@ monitoring FS -s <sample>
 ### オプションの詳細
 ```
 $ monitoring fusion --help
-version: v1.1.0
+version: v1.2.0
 usage: monitoring.py fusion [-h] --sample SAMPLE [--verbose] [--directory DIRECTORY]
 
 optional arguments:
@@ -233,7 +234,7 @@ monitoring AS -s <sample>
 ### オプションの詳細
 ```
 $ monitoring splice --help
-version: v1.1.0
+version: v1.2.0
 usage: monitoring.py splice [-h] --sample SAMPLE [--category CATEGORY] [--directory DIRECTORY] [--outdir OUTDIR]
 
 optional arguments:
@@ -272,7 +273,7 @@ monitoring PRE -fc <flowcellid>
 ### オプションの詳細
 ```
 $ monitoring preFilter --help
-version: v1.1.0
+version: v1.2.0
 usage: monitoring.py preFilter [-h] --flowcellid FLOWCELLID [--directory DIRECTORY] [--project_type {both,WTS,eWES}]
                                [--outdir OUTDIR] [--inclusion INCLUSION] [--exclusion EXCLUSION]
 optional arguments:
@@ -318,7 +319,7 @@ monitoring BM -fc <flowcellid>
 ### オプションの詳細
 ```
 $ monitoring benchmark --help
-version: v1.1.0
+version: v1.2.0
 usage: monitoring.py benchmark [-h] --flowcellid FLOWCELLID [--project_type {both,WTS,eWES}] [--directory DIRECTORY]
                                [--outdir OUTDIR] [--inclusion INCLUSION] [--exclusion EXCLUSION]
 optional arguments:
@@ -347,8 +348,33 @@ optional arguments:
 
 </details>
 
+<a id="intermediate"></a>
+## 9\.intermediate
+eWES SNV&InDel検出に使用されている3つのツール（mutect2,freebayes,lofreq）の解析結果一覧を作成する。
+```
+monitoring intermediate
+monitoring ITM 
+```
+⇒ /data1/work/monitoring/intermediate/[timestamp].3tools.xlsx が作成される
+<details>
+  <summary>
+    More Details
+  </summary>
+  
+### オプションの詳細
+```
+$ monitoring intermediate --help
+```
+| option           |required | 概要                     |default                              |
+|:-----------------|:-------:|:-------------------------|:------------------------------------|
+|--flowcellid/-fc  |False    |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字 |None    |
+|--directory/-d    |False    |解析フォルダの親ディレクトリ |/data1/data/result                  |
+|--outdir/-o       |False    |結果の出力先ディレクトリ     |/data1/work/monitoring/intermediate |
+
+</details>
+
 <a id="aggregate"></a>
-## 9\.aggregate
+## 10\.aggregate
 項目別の変異一覧をBoxにアップロードしている変異一覧のExcelファイルに張り付けられる形で出力する
 ```
 monitoring aggregate --flowcellid <flowcellid>
@@ -364,7 +390,7 @@ monitoring AGG -fc <flowcellid>
 ### オプションの詳細
 ```
 $ monitoring aggregate --help
-version: v1.1.0
+version: v1.2.0
 usage: monitoring.py aggregate [-h] --flowcellid FLOWCELLID [--project_type {both,WTS,eWES}] [--directory DIRECTORY]
                                [--outdir OUTDIR] [--inclusion INCLUSION] [--exclusion EXCLUSION]
 
