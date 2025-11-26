@@ -2,7 +2,7 @@ import sys
 import argparse
 from modules import *
 
-VERSION="v1.1.0"
+VERSION="v1.2.0"
 
 def main():
 
@@ -84,6 +84,15 @@ def main():
     parser_bcm.add_argument("--inclusion","-i", required=False, help="sample IDs to include (comma separated)", default="")
     parser_bcm.add_argument("--exclusion","-e", required=False, help="sample IDs to exclude (comma separated)", default="")
     parser_bcm.set_defaults(func=run_benchmark)
+
+    # SNV&InDel intermediate
+    parser_itm = subparsers.add_parser("intermediate", aliases=['ITM'], help="", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser_itm.add_argument("--flowcellid","-fc", required=False, help="flowcell id", default=None)
+    parser_itm.add_argument("--spread","-sp", required=False, help="Filtering details added", action='store_true')
+    parser_itm.add_argument("--frequency","-fq", required=False, help="Frequency of mutation detection sites added", action='store_true')
+    parser_itm.add_argument("--directory","-d", required=False, help="parent analytical directory", default="/data1/data/result")
+    parser_itm.add_argument("--outdir","-o", required=False, help="output directory path", default="/data1/work/monitoring/intermediate")
+    parser_itm.set_defaults(func=run_intermediate)
 
     # Data aggregation
     parser_agg = subparsers.add_parser("aggregate", aliases=['AGG'], help="List aggregation data (M3 only).", formatter_class=argparse.ArgumentDefaultsHelpFormatter)

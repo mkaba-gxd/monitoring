@@ -364,10 +364,25 @@ monitoring ITM
 ### オプションの詳細
 ```
 $ monitoring intermediate --help
+version: v1.2.0
+usage: monitoring.py intermediate [-h] [--flowcellid FLOWCELLID] [--spread] [--frequency] [--directory DIRECTORY] [--outdir OUTDIR]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --flowcellid FLOWCELLID, -fc FLOWCELLID
+                        flowcell id (default: None)
+  --spread, -sp         Filtering details added (default: False)
+  --frequency, -fq      Frequency of mutation detection sites added (default: False)
+  --directory DIRECTORY, -d DIRECTORY
+                        parent analytical directory (default: /data1/data/result)
+  --outdir OUTDIR, -o OUTDIR
+                        output directory path (default: /data1/work/monitoring/intermediate)
 ```
 | option           |required | 概要                     |default                              |
 |:-----------------|:-------:|:-------------------------|:------------------------------------|
-|--flowcellid/-fc  |False    |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字 |None    |
+|--flowcellid/-fc  |False    |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字 |None |
+|--spread/-sp      |False    |フィルタリングの詳細リートを追加する  |False   |
+|--frequency/-fq   |False    |変異検出箇所の頻度シートを追加する    |False   |
 |--directory/-d    |False    |解析フォルダの親ディレクトリ |/data1/data/result                  |
 |--outdir/-o       |False    |結果の出力先ディレクトリ     |/data1/work/monitoring/intermediate |
 

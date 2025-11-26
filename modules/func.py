@@ -129,6 +129,43 @@ def expand_breakpoints(df):
 
     return pd.DataFrame(expanded_rows)
 
+def load_vcf(vcf_path, d_type):
+
+    with open(vcf_path) as f:
+        skip_rows = sum(1 for line in f if line.startswith('#'))
+
+    if d_type :
+        data = pd.read_csv(vcf_path, sep='\t', skiprows=skip_rows, header=None, index_col=False, names=['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER','ATTR', 'FORMAT','INFO'])
+    else :
+        data = pd.read_csv(vcf_path, sep='\t', skiprows=skip_rows, header=None, index_col=False, names=['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO'])
+        data['FORMAT'] = None
+
+    data = data[["CHROM", "POS", "REF", "ALT","FORMAT","INFO"]].copy()
+
+    return data
+
+def search_vcf(data, chrom, position, ref, alt):
+
+    if data is None :
+        return None, None, None, None
+
+    data = data[ data['CHROM']==chrom ]
+    data = data[data['POS']==int(position)]
+    data = data[ data['REF']==ref]
+    data = data[ data['ALT']==alt].reset_index(drop=True)
+
+    if data.shape[0] == 0 :
+        return None, None, None, None
+
+    if data['FORMAT'][0] is None :
+        info_dict = dict(x.split("=", 1) for x in data['INFO'][0].split(";") if "=" in x)
+    else :
+        info_keys = data['FORMAT'][0].split(":")
+        info_value = data['INFO'][0].split(":")
+        info_dict = {key: val for key, val in zip(info_keys, info_value)}
+
+    return data['REF'][0], data['ALT'][0], info_dict.get("AF"), info_dict.get("DP")
+
 
 def pic_value(file, column):
     try :

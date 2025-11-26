@@ -7,6 +7,7 @@ from .seqr import *
 from .splice import *
 from .preFilter import *
 from .benchmark import *
+from .intermediate import *
 from .aggregate import *
 
 __all__ = [
@@ -18,5 +19,6 @@ __all__ = [
     "run_splice",
     "run_preFilter",
     "run_benchmark",
+    "run_intermediate",
     "run_aggregate"
     ]
