@@ -13,6 +13,7 @@ CAP検査（eWES/WTS）で実施された解析について、モニタリング
 | [fusion, FS](#fusion)        | (STAR-SEQR) 所要時間の推定            |
 | [splice, AS](#splice)        | EGFR, MET, AR 領域のdepthを描画       |
 | [preFilter, PRE](#preFilter) | フィルター前データ作成（レビュー用）    |
+| [inquire, INQ](#inquire)     | 問合せ用データセットの作成             |
 | [benchmark, BM](#benchmark)  | 工程所要時間の一覧作成                 |
 | [intermediate, ITM](#intermediate) | SNV&InDel 検出ツール毎の結果一覧 |
 | [aggregate, AGG](#aggregate) | Box用集計データの作成                 |
@@ -27,7 +28,7 @@ singularity exec --disable-cache --bind /data1 /data1/labTools/labTools.sif pyth
 helpページを表示してエイリアスの設定を確認する。以下が表示されればOK。
 ```
 $ monitoring --help
-version: v1.2.0
+version: v1.3.0
 usage: monitoring.py [-h] [--version] {QC,pureCN,CNV,SNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM} ...
 
 Tools for monitoring analysis data.
@@ -77,7 +78,7 @@ monitoring pureCN --flowcellid <flowcellid>
 ### オプションの詳細
 ```
 $ monitoring pureCN --help
-version: v1.2.0
+version: v1.3.0
 usage: monitoring.py pureCN [-h] --flowcellid FLOWCELLID [--inclusion INCLUSION]
                 [--exclusion EXCLUSION] [--directory DIRECTORY] [--outdir OUTDIR]
 
@@ -121,7 +122,7 @@ monitoring CNV --genes [GENES/gene list filepath]
 ### オプションの詳細
 ```
 $ monitoring CNV --help
-version: v1.2.0
+version: v1.3.0
 usage: monitoring.py CNV [-h] --genes GENES [--exclusion EXCLUSION] [--directory DIRECTORY] [--outdir OUTDIR]
 
 optional arguments:
@@ -158,7 +159,7 @@ monitoring SNV --sample <sample> --position <chr:pos> (--window <int>)
 ### オプションの詳細
 ```
 $ monitoring SNV --help
-version: v1.2.0
+version: v1.3.0
 usage: monitoring.py SNV [-h] --sample SAMPLE --position POSITION [--window WINDOW] [--directory DIRECTORY]
 
 optional arguments:
@@ -201,7 +202,7 @@ monitoring FS -s <sample>
 ### オプションの詳細
 ```
 $ monitoring fusion --help
-version: v1.2.0
+version: v1.3.0
 usage: monitoring.py fusion [-h] --sample SAMPLE [--verbose] [--directory DIRECTORY]
 
 optional arguments:
@@ -236,7 +237,7 @@ monitoring AS -s <sample>
 ### オプションの詳細
 ```
 $ monitoring splice --help
-version: v1.2.0
+version: v1.3.0
 usage: monitoring.py splice [-h] --sample SAMPLE [--category CATEGORY] [--directory DIRECTORY] [--outdir OUTDIR]
 
 optional arguments:
@@ -275,7 +276,7 @@ monitoring PRE -fc <flowcellid>
 ### オプションの詳細
 ```
 $ monitoring preFilter --help
-version: v1.2.0
+version: v1.3.0
 usage: monitoring.py preFilter [-h] --flowcellid FLOWCELLID [--directory DIRECTORY] [--project_type {both,WTS,eWES}]
                                [--outdir OUTDIR] [--inclusion INCLUSION] [--exclusion EXCLUSION]
 optional arguments:
@@ -304,6 +305,33 @@ optional arguments:
 
 </details>
 
+<a id="inquire"></a>
+## 8\. inquire
+開発チームへ問い合わせる際に送付するデータセットを作成する。
+```
+monitoring inquire --sample <sample>
+monitoring INQ -s <sample>
+```
+⇒ /data3/CAP/[YYYYMMDD]/[sample] の下にBAMなどのファイルが生成される\
+※ すでに出力ファイルが存在する場合は上書きする。
+<details>
+  <summary> 
+    More Details
+  </summary>
+
+### オプションの詳細
+```
+$ monitoring inquire --help
+```
+| option        |required | 概要                     |default               |
+|:--------------|:-------:|:-------------------------|:---------------------|
+|--sample/-s    |True     |Sample ID, 複数指定不可    |None                  |
+|--locus/-l     |False    |BAMの領域を限定する         |None   |
+|--directory/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result |
+|--outdir/-o    |False    |結果の出力先ディレクトリ     |/data3/CAP |
+
+</details>
+
 <a id="benchmark"></a>
 ## 8\. benchmark
 解析工程でBenchmarkフォルダに出力される各工程の所要時間(h:m:sの値)のテーブルをファイル出力する。
@@ -321,7 +349,7 @@ monitoring BM -fc <flowcellid>
 ### オプションの詳細
 ```
 $ monitoring benchmark --help
-version: v1.2.0
+version: v1.3.0
 usage: monitoring.py benchmark [-h] --flowcellid FLOWCELLID [--project_type {both,WTS,eWES}] [--directory DIRECTORY]
                                [--outdir OUTDIR] [--inclusion INCLUSION] [--exclusion EXCLUSION]
 optional arguments:
@@ -366,7 +394,7 @@ monitoring ITM
 ### オプションの詳細
 ```
 $ monitoring intermediate --help
-version: v1.2.0
+version: v1.3.0
 usage: monitoring.py intermediate [-h] [--flowcellid FLOWCELLID] [--spread] [--frequency] [--directory DIRECTORY] [--outdir OUTDIR]
 
 optional arguments:
@@ -407,7 +435,7 @@ monitoring AGG -fc <flowcellid>
 ### オプションの詳細
 ```
 $ monitoring aggregate --help
-version: v1.2.0
+version: v1.3.0
 usage: monitoring.py aggregate [-h] --flowcellid FLOWCELLID [--project_type {both,WTS,eWES}] [--directory DIRECTORY]
                                [--outdir OUTDIR] [--inclusion INCLUSION] [--exclusion EXCLUSION]
 
