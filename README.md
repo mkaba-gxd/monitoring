@@ -326,9 +326,11 @@ $ monitoring inquire --help
 | option        |required | 概要                     |default               |
 |:--------------|:-------:|:-------------------------|:---------------------|
 |--sample/-s    |True     |Sample ID, 複数指定不可    |None                  |
-|--locus/-l     |False    |BAMの領域を限定する         |None   |
-|--directory/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result |
-|--outdir/-o    |False    |結果の出力先ディレクトリ     |/data3/CAP |
+|--locus/-l     |False    |BAMの領域を限定する         |None (全領域) |
+|--directory/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result    |
+|--outdir/-o    |False    |結果の出力先ディレクトリ     |/data3/CAP           |
+
+locus オプションは chr:start_pos-stop_pos の形式で指定する（例: --locus chr10:418912-419254 ）
 
 </details>
 
