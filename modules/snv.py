@@ -113,7 +113,7 @@ def run_snv(args):
         init('The position should be entered as an integer.')
 
     subDir = batch(sample, anal_dir, 'eWES')
-    if subDir is None : init("No registration in database")
+    if subDir == "Incorrect" : init("No registration in database")
 
     # mutect2
     file = os.path.join(anal_dir, 'eWES', subDir, sample, 'SNV', 'somatic', 'mutect2', sample + '.mutect2.cleaned.vcf')

@@ -2,7 +2,7 @@ import sys
 import argparse
 from modules import *
 
-VERSION="v1.2.0"
+VERSION="v1.3.0"
 
 def main():
 
@@ -74,6 +74,15 @@ def main():
     parser_pre.add_argument("--inclusion","-i", required=False, help="sample IDs to include (comma separated)", default="")
     parser_pre.add_argument("--exclusion","-e", required=False, help="sample IDs to exclude (comma separated)", default="")
     parser_pre.set_defaults(func=run_preFilter)
+
+    # Creating a dataset for inquiries
+    parser_inq = subparsers.add_parser("inquire", aliases=['INQ'], help="create dataset for inquiries", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser_inq.add_argument("--sample","-s", required=True, help="sample id")
+    parser_inq.add_argument("--item","-i", required=True, help="Report Item", choices=["snv","fusion","splice"])
+    parser_inq.add_argument("--locus","-l", required=False, help="region of the BAM file", default=None)
+    parser_inq.add_argument("--directory","-d", required=False, help="parent analytical directory", default="/data1/data/result")
+    parser_inq.add_argument("--outdir","-o", required=False, help="output directory path", default="/data3/CAP")
+    parser_inq.set_defaults(func=run_inquire)
 
     # Creating Benchmark Files
     parser_bcm = subparsers.add_parser("benchmark", aliases=['BM'], help="List benchmark data.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)

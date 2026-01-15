@@ -35,7 +35,7 @@ def run_splice(args) :
     anal_dir = args.directory
 
     subDir = batch(sample, anal_dir, 'WTS')
-    if subDir is None : init("No registration in database")
+    if subDir == "Incorrect" : init("No registration in database")
 
     inc = [item for item in category if item in LIST ]
     exc = [item for item in category if item not in LIST ]

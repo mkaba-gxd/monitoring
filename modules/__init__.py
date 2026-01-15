@@ -6,6 +6,7 @@ from .snv import *
 from .seqr import *
 from .splice import *
 from .preFilter import *
+from .inquire import *
 from .benchmark import *
 from .intermediate import *
 from .aggregate import *
@@ -18,6 +19,7 @@ __all__ = [
     "run_seqr",
     "run_splice",
     "run_preFilter",
+    "run_inquire",
     "run_benchmark",
     "run_intermediate",
     "run_aggregate"

@@ -96,8 +96,8 @@ def batch(sample, anal_dir, anal_type):
 
     tbl = getinfo(subname_query(sample))
     tbl['PRJ_TYPE'] = tbl['PRJ_TYPE'].str.replace('EWES',"eWES")
-    if tbl.shape[0] == 0 : init("Unregistered sample ID.")
-    if anal_type != tbl.PRJ_TYPE[0] : init("Analysis type is not " + anal_type)
+    if tbl.shape[0] == 0 : return("Incorrect")
+    if anal_type != tbl.PRJ_TYPE[0] : return("Incorrect")
     subname = tbl.sub_name[0]
     anal_dir = Path(os.path.join(anal_dir, anal_type))
     fcDirs = [fcDir for fcDir in anal_dir.iterdir() if fcDir.name.endswith(subname)]

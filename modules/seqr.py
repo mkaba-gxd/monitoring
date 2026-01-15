@@ -23,7 +23,7 @@ def run_seqr(args):
     anal_dir = args.directory
 
     subDir = batch(sample, anal_dir, 'WTS')
-    if subDir is None : init("No registration in database")
+    if subDir == "Incorrect" : init("No registration in database")
 
     chim_dir = os.path.join(anal_dir, 'WTS', subDir, sample, 'Fusion', 'STAR-SEQR', f"{sample}_STAR-SEQR", 'chim_transcripts')
     if not os.path.isdir(chim_dir) : init("chim_transcripts folder not yet created: " + chim_dir)
