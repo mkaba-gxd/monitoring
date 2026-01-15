@@ -107,7 +107,11 @@ def create_inq(bam, forward: Path, tempDir, files=None, locus=None, sort=False) 
 
     cmd += f"rm -rf {tempDir} "
 
-    if os.path.isdir(forward) : shutil.rmtree(forward)
+    if os.path.isdir(forward) : 
+        choice = prompt_choice("The output directory exists. Do you want to delete its contents? (yes[Y]/no[N]): ", ['yes', 'y', 'no', 'n'])
+        if choice in ['yes', 'y']:
+            shutil.rmtree(forward)
+
     os.makedirs(forward, exist_ok=True)
 
     qsubCmd = f"/data1/apps/sge/bin/lx-amd64/qsub -N INQ_{tmp_name} -q all.q -pe smp 12 -o /dev/null -e /dev/null << EOF\n{cmd}\nEOF"

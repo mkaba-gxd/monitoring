@@ -182,6 +182,12 @@ def remove_files(FILES) :
         if os.path.isfile(file):
             os.remove(file)
 
+def prompt_choice(prompt, choices):
+    while True:
+        ans = input(prompt).strip().lower()
+        if ans in choices:
+            return ans
+
 def init(msg="No matching data found.", parser=None):
     print(msg)
     if parser :
