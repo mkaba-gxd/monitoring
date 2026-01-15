@@ -314,7 +314,13 @@ monitoring INQ -s <sample>
 ```
 ⇒ /data3/CAP/[YYYYMMDD]/[sample] の下にBAMなどのファイルが生成される\
 ※ YYYYMMDD はコマンド実行時の年月日\
-※ コマンド実行時に送付予定のファイルと同名のファイルが出力フォルダに存在する場合は、削除してから実行する
+※ コマンド実行時に送付予定のファイルと同名のファイルが出力フォルダに存在する場合は、削除してから実行する\
+【送付するデータの内容】
+|item   |検査項目              |中間ファイル                                                         |概要                                     |
+|:------|:--------------------|:-------------------------------------------------------------------|:----------------------------------------|
+|snv    |SNV & InDel          |\*/Preprocessing/align/[sample].tumour.recaled.bam                  |変異コールツールへの入力BAM                |
+|fusion |Fusion               |\*/Fusion/STAR-Fusion/STAR_align_starfu/[sample].star-fusion.Aligned.out.bam <br>\*/Fusion/[sample].fusion.filtered.tsv <br>\*/Fusion/Arriba/[sample].fusions.tsv <br>\*/Fusion/STAR-Fusion/star-fusion.fusion_predictions.abridged.coding_effect.tsv |STAR-Fusion実行時に生成されたSAM/BAM <br> Fusion解析の途中ファイル |
+|splice |Alternative Splicing |\*/Expression/STAR_align_exp/[sample].Aligned.sortedByCoord.out.bam |発現量解析のためのSTAR-alignで生成されたBAM |
 
 <details>
   <summary> 
@@ -348,13 +354,7 @@ optional arguments:
 |--directory/-d |False    |解析フォルダの親ディレクトリ   |/data1/data/result    |
 |--outdir/-o    |False    |結果の出力先ディレクトリ       |/data3/CAP           |
 
-locus オプションは chr:start_pos-stop_pos の形式で指定する（例: --locus chr10:418912-419254 ）\
-item オプションによって作成されるデータセットの内容
-|item   |検査項目              |中間ファイル                                                         |
-|:------|:--------------------|:-------------------------------------------------------------------|
-|snv    |SNV & InDel          |\*/Preprocessing/align/[sample].tumour.recaled.bam                  |
-|fusion |Fusion               |\*/Fusion/STAR-Fusion/STAR_align_starfu/[sample].star-fusion.Aligned.out.bam <br>\*/Fusion/[sample].fusion.filtered.tsv <br>\*/Fusion/Arriba/[sample].fusions.tsv <br>\*/Fusion/STAR-Fusion/star-fusion.fusion_predictions.abridged.coding_effect.tsv |
-|splice |Alternative Splicing |\*/Expression/STAR_align_exp/[sample].Aligned.sortedByCoord.out.bam |
+locus オプションは chr:start_pos-stop_pos の形式で指定する（例: --locus chr10:418912-419254 ）
 
 </details>
 
