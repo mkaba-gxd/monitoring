@@ -29,12 +29,12 @@ helpページを表示してエイリアスの設定を確認する。以下が�
 ```
 $ monitoring --help
 version: v1.3.0
-usage: monitoring.py [-h] [--version] {QC,pureCN,CNV,SNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM} ...
+usage: monitoring.py [-h] [--version] {QC,pureCN,CNV,SNV,fusion,FS,splice,AS,preFilter,PRE,inquire,INQ,benchmark,BM,intermediate,ITM,aggregate,AGG} ...
 
 Tools for monitoring analysis data.
 
 positional arguments:
-  {QC,pureCN,CNV,SNV,fusion,FS,splice,AS,preFilter,PRE,benchmark,BM,aggregate,AGG}
+  {QC,pureCN,CNV,SNV,fusion,FS,splice,AS,preFilter,PRE,inquire,INQ,benchmark,BM,intermediate,ITM,aggregate,AGG}
     QC                  QC monitoring
     pureCN              PureCN window size monitoring
     CNV                 Copy Numver monitoring
@@ -42,7 +42,9 @@ positional arguments:
     fusion (FS)         Fusion(STAR-SEQR) monitoring
     splice (AS)         Alternative Splicing monitoring
     preFilter (PRE)     create pre-filtered data
+    inquire (INQ)       create dataset for inquiries
     benchmark (BM)      List benchmark data.
+    intermediate (ITM)
     aggregate (AGG)     List aggregation data (M3 only).
 
 optional arguments:
