@@ -314,7 +314,8 @@ monitoring INQ -s <sample>
 ```
 ⇒ /data3/CAP/[YYYYMMDD]/[sample] の下にBAMなどのファイルが生成される\
 ※ YYYYMMDD はコマンド実行時の年月日\
-※ すでに出力ディレクトリが存在する場合は、ディレクトリ以下のファイルを削除するかどうか聞かれる
+※ コマンド実行時に送付予定のファイルと同名のファイルが出力フォルダに存在する場合は、削除してから実行する
+
 <details>
   <summary> 
     More Details
@@ -358,7 +359,7 @@ item オプションによって作成されるデータセットの内容
 </details>
 
 <a id="benchmark"></a>
-## 8\. benchmark
+## 9\. benchmark
 解析工程でBenchmarkフォルダに出力される各工程の所要時間(h:m:sの値)のテーブルをファイル出力する。
 ```
 monitoring benchmark --flowcellid <flowcellid>
@@ -404,7 +405,7 @@ optional arguments:
 </details>
 
 <a id="intermediate"></a>
-## 9\.intermediate
+## 10\.intermediate
 eWES SNV&InDel検出に使用されている3つのツール（mutect2,freebayes,lofreq）の解析結果一覧を作成する。
 ```
 monitoring intermediate
@@ -444,7 +445,7 @@ optional arguments:
 </details>
 
 <a id="aggregate"></a>
-## 10\.aggregate
+## 11\.aggregate
 項目別の変異一覧をBoxにアップロードしている変異一覧のExcelファイルに張り付けられる形で出力する
 ```
 monitoring aggregate --flowcellid <flowcellid>

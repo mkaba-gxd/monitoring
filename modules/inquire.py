@@ -4,7 +4,6 @@ import re
 import glob
 import warnings
 import datetime
-import shutil
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -45,6 +44,7 @@ def create_inq(bam, forward: Path, tempDir, files=None, locus=None, sort=False) 
     tmp_name = os.path.basename(tempDir)
 
     cmd = ''
+    dataset = [os.path.basename(bam), os.path.basename(bam) + '.bai']
     idx_flag = True
     mv_flag  = True
 
@@ -97,6 +97,7 @@ def create_inq(bam, forward: Path, tempDir, files=None, locus=None, sort=False) 
         for sendFile in files :
             if os.path.isfile(sendFile) :
                 cmd += f"rsync -azruL {sendFile} {tempDir}/ && "
+                dataset.append(os.path.basename(endFile))
             else :
                 print("File not found: " + sendFile + "; skip")
 
@@ -107,10 +108,10 @@ def create_inq(bam, forward: Path, tempDir, files=None, locus=None, sort=False) 
 
     cmd += f"rm -rf {tempDir} "
 
-    if os.path.isdir(forward) : 
-        choice = prompt_choice("The output directory exists. Do you want to delete its contents? (yes[Y]/no[N]): ", ['yes', 'y', 'no', 'n'])
-        if choice in ['yes', 'y']:
-            shutil.rmtree(forward)
+    if os.path.isdir(forward) :
+        for f in dataset :
+            if os.path.isfile(os.path.join(forward, f)) :
+                 os.remove(os.path.join(forward, f))
 
     os.makedirs(forward, exist_ok=True)
 
