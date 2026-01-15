@@ -313,7 +313,8 @@ monitoring inquire --sample <sample>
 monitoring INQ -s <sample>
 ```
 ⇒ /data3/CAP/[YYYYMMDD]/[sample] の下にBAMなどのファイルが生成される\
-※ すでに出力ファイルが存在する場合は上書きする。
+※ YYYYMMDD はコマンド実行時の年月日\
+※ すでに出力ディレクトリが存在する場合は、ディレクトリ以下のファイルを削除するかどうか聞かれる
 <details>
   <summary> 
     More Details
@@ -322,15 +323,37 @@ monitoring INQ -s <sample>
 ### オプションの詳細
 ```
 $ monitoring inquire --help
+version: v1.3.0
+usage: monitoring.py inquire [-h] --sample SAMPLE --item {snv,fusion,splice}
+                             [--locus LOCUS] [--directory DIRECTORY] [--outdir OUTDIR]
+optional arguments:
+  -h, --help            show this help message and exit
+  --sample SAMPLE, -s SAMPLE
+                        sample id (default: None)
+  --item {snv,fusion,splice}, -i {snv,fusion,splice}
+                        Report Item (default: None)
+  --locus LOCUS, -l LOCUS
+                        region of the BAM file (default: None)
+  --directory DIRECTORY, -d DIRECTORY
+                        parent analytical directory (default: /data1/data/result)
+  --outdir OUTDIR, -o OUTDIR
+                        output directory path (default: /data3/CAP)
 ```
-| option        |required | 概要                     |default               |
-|:--------------|:-------:|:-------------------------|:---------------------|
-|--sample/-s    |True     |Sample ID, 複数指定不可    |None                  |
-|--locus/-l     |False    |BAMの領域を限定する         |None (全領域) |
-|--directory/-d |False    |解析フォルダの親ディレクトリ |/data1/data/result    |
-|--outdir/-o    |False    |結果の出力先ディレクトリ     |/data3/CAP           |
+| option        |required | 概要                       |default               |
+|:--------------|:-------:|:---------------------------|:---------------------|
+|--sample/-s    |True     |Sample ID, 複数指定不可      |None                  |
+|--item/-i      |True     |snv,fusion,spliceから1つ選択 |None                  |
+|--locus/-l     |False    |BAMの領域を限定する           |None (全領域) |
+|--directory/-d |False    |解析フォルダの親ディレクトリ   |/data1/data/result    |
+|--outdir/-o    |False    |結果の出力先ディレクトリ       |/data3/CAP           |
 
-locus オプションは chr:start_pos-stop_pos の形式で指定する（例: --locus chr10:418912-419254 ）
+locus オプションは chr:start_pos-stop_pos の形式で指定する（例: --locus chr10:418912-419254 ）\
+item オプションによって作成されるデータセットの内容
+|item   |検査項目              |中間ファイル                                                         |
+|:------|:--------------------|:-------------------------------------------------------------------|
+|snv    |SNV & InDel          |\*/Preprocessing/align/[sample].tumour.recaled.bam                  |
+|fusion |Fusion               |\*/Fusion/STAR-Fusion/STAR_align_starfu/[sample].star-fusion.Aligned.out.bam <br>\*/Fusion/[sample].fusion.filtered.tsv <br>\*/Fusion/Arriba/[sample].fusions.tsv <br>\*/Fusion/STAR-Fusion/star-fusion.fusion_predictions.abridged.coding_effect.tsv |
+|splice |Alternative Splicing |\*/Expression/STAR_align_exp/[sample].Aligned.sortedByCoord.out.bam |
 
 </details>
 
