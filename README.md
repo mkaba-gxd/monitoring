@@ -415,7 +415,7 @@ optional arguments:
 </details>
 
 <a id="intermediate"></a>
-## 10\.intermediate
+## 10\. intermediate
 eWES SNV&InDel検出に使用されている3つのツール（mutect2,freebayes,lofreq）の解析結果一覧を作成する。
 ```
 monitoring intermediate
@@ -455,7 +455,7 @@ optional arguments:
 </details>
 
 <a id="aggregate"></a>
-## 11\.aggregate
+## 11\. aggregate
 項目別の変異一覧をBoxにアップロードしている変異一覧のExcelファイルに張り付けられる形で出力する
 ```
 monitoring aggregate --flowcellid <flowcellid>
