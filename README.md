@@ -19,9 +19,13 @@ CAP検査（eWES/WTS）で実施された解析について、モニタリング
 | [aggregate, AGG](#aggregate) | Box用集計データの作成                 |
 
 ## エイリアスの作成 ※初回のみ
-~/bin フォルダ直下に以下のコマンドを記載したテキストファイル monitoring を作成し、実行権限を付与する。\
-(gxd_pipeline, guest_user ユーザーには実装済み) \
-エイリアスを作成しない場合は、singularity でコンテナとスクリプトファイルを指定して実行する。
+**gxd_pipeline, guest_user ユーザーには実装済みですので、実行しなくて良いです。**\
+~/bin フォルダ直下に以下のコマンドを記載したテキストファイル monitoring を作成し、実行権限を付与する。
+<details>
+  <summary> 
+    More Details
+  </summary>
+
 ```
 singularity exec --disable-cache --bind /data1 /data1/labTools/labTools.sif python /data1/labTools/monitoring/latest/monitoring.py $@
 ```
@@ -55,6 +59,10 @@ optional arguments:
 ```
 monitoring <command> --help
 ```
+エイリアスを作成しない場合は、singularity でコンテナとスクリプトファイルを指定して実行する。
+
+</details>
+
 <a id="QC"></a>
 ## 1\. QC値 
 スクリプトを実行した時点でデータベースに登録されている全検体のQC情報の一覧を作成する。\
