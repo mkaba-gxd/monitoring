@@ -97,7 +97,7 @@ def create_inq(bam, forward: Path, tempDir, files=None, locus=None, sort=False) 
         for sendFile in files :
             if os.path.isfile(sendFile) :
                 cmd += f"rsync -azruL {sendFile} {tempDir}/ && "
-                dataset.append(os.path.basename(endFile))
+                dataset.append(os.path.basename(sendFile))
             else :
                 print("File not found: " + sendFile + "; skip")
 
