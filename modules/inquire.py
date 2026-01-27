@@ -11,29 +11,36 @@ from .func import *
 
 def splitLocus(locus) :
 
-    pattern = re.compile(r"[A-Za-z0-9]+:[0-9]+-[0-9]+")
+    pattern_1 = re.compile(r"[A-Za-z0-9]+:[0-9]+-[0-9]+")
+    pattern_2 = re.compile(r"[A-Za-z]+[0-9]+")
     valid_chroms = {f"chr{i}" for i in range(1, 23)} | {"chrX", "chrY", "chrM"}
 
-    if not pattern.fullmatch(locus) :
-        init("wrong locus")
+    if pattern_1.fullmatch(locus) :
+        chrom = locus.split(':')[0]
+        if chrom not in valid_chroms : init("wrong locus")
 
-    chrom = locus.split(':')[0]
-    if chrom not in valid_chroms :
-        init("wrong locus")
+        start = locus.split(':')[1].split('-')[0]
+        if start.isdigit() :
+            start = int(start)
+        else:
+            init("wrong locus")
 
-    start = locus.split(':')[1].split('-')[0]
-    if start.isdigit() :
-        start = int(start)
-    else:
-        init("wrong locus")
+        stop  = locus.split(':')[1].split('-')[1]
+        if stop.isdigit() :
+            stop = int(stop)
+        else :
+            init("wrong locus")
 
-    stop  = locus.split(':')[1].split('-')[1]
-    if stop.isdigit() :
-        stop = int(stop)
+        if stop <= start :
+            init("wrong locus")
+
+    elif pattern_2.fullmatch(locus) :
+
+        chrom = locus.split(':')[0]
+        if chrom not in valid_chroms : init("wrong locus")
+
     else :
-        init("wrong locus")
 
-    if stop <= start :
         init("wrong locus")
 
 
