@@ -157,6 +157,12 @@ def run_preFilter(args):
     df_info = df_info[~df_info['SAMPLE_ID'].str.contains('_PCE_|_NCE_|_PCT_|_NCT_', regex=True, na=False)]
     if df_info.shape[0] == 0 : init("No clinical specimens match the criteria.")
 
+    running = df_info[ df_info['ANAL_STATUS'] != '102' ]
+    if running.shape[0] > 0 :
+        print('sample currently being analyzed: '+ ','.join(running['SAMPLE_ID']))
+        print('skip these samples.')
+        df_info = df_info[ df_info['ANAL_STATUS'] == '102' ]
+
     uniq_info = fcDir_table(df_info, directory)
     if uniq_info.shape[0] == 0: init()
 
@@ -259,7 +265,7 @@ def run_preFilter(args):
 
                 file = os.path.join(anal_dir, item['SAMPLE_ID'], 'Fusion', item['SAMPLE_ID']+'.fusion.marked.tsv')
                 if not os.path.isfile(file):
-                    print('file not exists: ' + file)
+#                    print('file not exists: ' + file)
                     data_f = pd.DataFrame(columns=use_columns_wts_1)
                 else:
                     data = pd.read_csv(file, sep="\t", low_memory=False)
